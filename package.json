@@ -1,0 +1,30 @@
+{
+  "author": "Ben Ng <me@benng.me> (http://benng.me)",
+  "name": "minifyify",
+  "description": "Minify your browserify bundles without losing the sourcemap",
+  "keywords": [
+    "uglify",
+    "browserify",
+    "minify",
+    "compress"
+  ],
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ben-ng/minifyify.git"
+  },
+  "main": "./index.js",
+  "dependencies": {
+    "concat-stream": "1.0.x",
+    "atob": "1.1.x",
+    "source-map": "0.1.x",
+    "uglify-js": "2.3.x",
+    "browserify": "latest"
+  },
+  "scripts": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "0.10.x"
+  }
+}
