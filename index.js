@@ -18,38 +18,27 @@ var printSourceMap = function (map) {
 };
 
 // Fixes uglify warnings from the browserify prelude
-var fixSourcemapForPrelude = function (sourcemap, cb) {
-  // Yeah, this is weird, but we want to use the prelude.js that browserify depends on
-  var BROWSER_PACK_FILE = path.join(__dirname, 'node_modules', 'browserify', 'node_modules', 'browser-pack', '_prelude.js');
+var fixSourcemapForPrelude = function (sourcemap) {
+  var consumer = new SMConsumer(sourcemap)
+  , preludeConsumer
+  , generator = SMGenerator.fromSourceMap(consumer)
+  , srcFile = '/node_modules/browserify/node_modules/browser-pack/_prelude.js'
+  , preludeParsed
+  , outputMap;
 
-  fs.readFile(BROWSER_PACK_FILE, function (err, preludeData) {
-    if(err) {
-      return cb(err);
-    }
-
-    var consumer = new SMConsumer(sourcemap)
-    , preludeConsumer
-    , generator = SMGenerator.fromSourceMap(consumer)
-    , srcFile = '/node_modules/browserify/node_modules/browser-pack/_prelude.js'
-    , preludeParsed
-    , outputMap;
-
-    preludeData = preludeData.toString();
-
-    // Just map to the minifed version, after all nothing should be going wrong in there
-    generator.addMapping({
-      generated: {line:1, column: 0}
-    , original: {line:1, column: 0}
-    , source: srcFile
-    });
-
-    // Add the original prelude file
-    generator.setSourceContent(srcFile, preludeData)
-
-    outputMap = generator.toString();
-
-    cb(null, outputMap);
+  // Just map to the minifed version, after all nothing should be going wrong in there
+  generator.addMapping({
+    generated: {line:1, column: 0}
+  , original: {line:1, column: 0}
+  , source: srcFile
   });
+
+  // Add the original prelude file
+  generator.setSourceContent(srcFile, '(`browser-pack` prelude)');
+
+  outputMap = generator.toString();
+
+  return outputMap;
 };
 
 // Adds sourcecontent to sourcemap
@@ -127,28 +116,24 @@ var minifyify = function (cb) {
 
     outBuff = decoupleBundle(outBuff);
 
-    fixSourcemapForPrelude(outBuff.map, function (err, newmap) {
+    outBuff.map = fixSourcemapForPrelude(outBuff.map);
+
+    fs.writeFile(TMP_FILE, outBuff.map, function (err) {
+      var minBuff;
+
       if(err) {
         return cb(err);
       }
 
-      fs.writeFile(TMP_FILE, newmap, function (err) {
-        var minBuff;
-
-        if(err) {
-          return cb(err);
-        }
-
-        minBuff = uglify.minify(outBuff.code, {
-            inSourceMap: TMP_FILE,
-            outSourceMap: 'js/scripts.map',
-            fromString: true
-        });
-
-        minBuff.map = enhanceSourcemapWithContent(outBuff.map, minBuff.map);
-
-        cb(minBuff.code, minBuff.map);
+      minBuff = uglify.minify(outBuff.code, {
+          inSourceMap: TMP_FILE,
+          outSourceMap: 'js/scripts.map',
+          fromString: true
       });
+
+      minBuff.map = enhanceSourcemapWithContent(outBuff.map, minBuff.map);
+
+      cb(minBuff.code, minBuff.map);
     });
   });
 };

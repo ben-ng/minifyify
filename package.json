@@ -8,7 +8,7 @@
     "minify",
     "compress"
   ],
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
@@ -18,8 +18,7 @@
     "concat-stream": "1.0.x",
     "atob": "1.1.x",
     "source-map": "0.1.x",
-    "uglify-js": "2.3.x",
-    "browserify": "latest"
+    "uglify-js": "2.3.x"
   },
   "scripts": {},
   "devDependencies": {},
