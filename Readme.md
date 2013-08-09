@@ -7,7 +7,7 @@ Minifyify
 
 Just like how you would use `concat-stream`.
 
-```
+```js
 var mold = require('mold-source-map')
   , browserify = require('browserify')
   , minifyify = require('minifyify')
