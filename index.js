@@ -8,10 +8,19 @@ var concat = require('concat-stream')
   , SMGenerator = sourcemap.SourceMapGenerator
   , os = require('os');
 
+// Debugging function
+var printSourceMap = function (map) {
+  var self = this
+    , order = SMConsumer.ORIGINAL_ORDER;
+  (new SMConsumer(map)).eachMapping(function (mapping, self, order) {
+    console.log(mapping.generatedLine + ',' + mapping.generatedColumn + ' > ' + mapping.originalLine + ',' + mapping.originalColumn + ' in ' + mapping.source);
+  });
+};
+
 // Fixes uglify warnings from the browserify prelude
 var fixSourcemapForPrelude = function (sourcemap, cb) {
   // Yeah, this is weird, but we want to use the prelude.js that browserify depends on
-  var BROWSER_PACK_FILE = path.join(__dirname, 'node_modules', 'browserify', 'node_modules', 'browser-pack', 'prelude.js');
+  var BROWSER_PACK_FILE = path.join(__dirname, 'node_modules', 'browserify', 'node_modules', 'browser-pack', '_prelude.js');
 
   fs.readFile(BROWSER_PACK_FILE, function (err, preludeData) {
     if(err) {
@@ -21,49 +30,50 @@ var fixSourcemapForPrelude = function (sourcemap, cb) {
     var consumer = new SMConsumer(sourcemap)
     , preludeConsumer
     , generator = SMGenerator.fromSourceMap(consumer)
-    , srcFile = '/node_modules/browserify/node_modules/browser-pack/prelude.js'
-    , preludeMap;
+    , srcFile = '/node_modules/browserify/node_modules/browser-pack/_prelude.js'
+    , preludeParsed
+    , outputMap;
 
     preludeData = preludeData.toString();
 
-    // FIXME:
-    // Compression options `unused` and `dead_code` don't seem to work
-    // uglifyjs will remove everything in this file unless we execute the function ):
-    preludeData = preludeData + '();'
-
-    // Create a sourcemap using uglify (which browserify also uses)
-    preludeMap = uglify.minify(preludeData, {
-      outSourceMap: 'js/prelude.map'
-    , fromString: true
-    , compress: {
-        // Leaving these in here, but they don't seem to work without the fix on #16
-        unused: false
-      , dead_code: false
-      }
-    }).map;
-
-    // Add these mappings to our sourcemap
-    preludeConsumer = new SMConsumer(preludeMap);
-    preludeConsumer.eachMapping(function (mapping) {
-      generator.addMapping({
-        generated: {line:mapping.generatedLine, column: mapping.generatedColumn}
-      , original: {line:mapping.originalLine, column: mapping.originalColumn}
-      , source: srcFile
-      });
+    // Just map to the minifed version, after all nothing should be going wrong in there
+    generator.addMapping({
+      generated: {line:1, column: 0}
+    , original: {line:1, column: 0}
+    , source: srcFile
     });
 
     // Add the original prelude file
     generator.setSourceContent(srcFile, preludeData)
 
-    cb(null, generator.toString());
+    outputMap = generator.toString();
+
+    cb(null, outputMap);
   });
 };
 
 // Adds sourcecontent to sourcemap
 var enhanceSourcemapWithContent = function (inputmap, outputmap) {
-  var output = JSON.parse(outputmap);
+  var output = JSON.parse(outputmap)
+    , input = JSON.parse(inputmap)
+    , mappings = {}
+    , filename
+    , outputSourcesContent = [];
 
-  output.sourcesContent = JSON.parse(inputmap).sourcesContent;
+  // Preserve the order of the sourceContent
+  for(var i=0, ii=input.sources.length; i<ii; i++) {
+    filename = input.sources[i];
+
+    mappings[filename] = input.sourcesContent[i];
+  }
+
+  for(var i=0, ii=output.sources.length; i<ii; i++) {
+    filename = output.sources[i];
+
+    outputSourcesContent.push(mappings[filename]);
+  }
+
+  output.sourcesContent = outputSourcesContent;
 
   return JSON.stringify(output);
 };
@@ -114,6 +124,7 @@ var minifyify = function (cb) {
     , TMP_FILE = path.join(os.tmpdir(), 'minifyify.' + randomNum + '.map');
 
   return concat(function (outBuff) {
+
     outBuff = decoupleBundle(outBuff);
 
     fixSourcemapForPrelude(outBuff.map, function (err, newmap) {
