@@ -12,7 +12,55 @@ var assert = require('assert')
   , fs = require('fs')
   , SM = require('source-map')
   , SMConsumer = SM.SourceMapConsumer
+  , testSourcemap
   , tests;
+
+testSourcemap = function (fixtureName) {
+  return function (next) {
+    var bundle = new browserify()
+      , bundledFile = fixtures.bundledFile(fixtureName)
+      , bundledMap = fixtures.bundledMap(fixtureName)
+      , minifier = new minifyify({
+          source: bundledFile
+        , map: path.basename(bundledMap)
+        , transformPaths: function (filePath) {
+            return path.relative(fixtures.dir, filePath);
+          }
+        })
+      , d = domain.create();
+
+    bundle.add( fixtures.entryScript(fixtureName) );
+    bundle.transform(minifier.transformer);
+
+    // We don't expect any errors
+    d.on('error', function (e) {
+      assert.fail('there should be no errors, but this happened: ' + e);
+    });
+
+    // Try to consume output, should trigger error inside domain
+    d.run(function () {
+      bundle.bundle({debug: true})
+      .pipe(minifier.consumer(function (code, map) {
+        assert.ok('the consumer callback was called');
+
+        var consumer = new SMConsumer(map);
+
+        if(process.env.debug) {
+          var bundledPage = path.join(path.dirname(bundledFile), 'index.html');
+          console.log(' [DEBUG] Writing output to fixture directory');
+          console.log('  bundle: ' + path.relative(process.cwd(), bundledFile));
+          console.log('  map:    ' + path.relative(process.cwd(), bundledMap));
+          console.log('  open "' + path.relative(process.cwd(), bundledPage) + '" in your browser dev tools');
+
+          fs.writeFileSync(bundledFile, code);
+          fs.writeFileSync(bundledMap, map);
+        }
+
+        next();
+      }));
+    });
+  }
+};
 
 tests = {
   'fails to consume when not in debug mode': function (next) {
@@ -71,50 +119,8 @@ tests = {
       }));
     });
   }
-, 'transforms sourcemap': function (next) {
-    var bundle = new browserify()
-      , bundledFile = fixtures.bundledFile('complex file')
-      , bundledMap = fixtures.bundledMap('complex file')
-      , minifier = new minifyify({
-          source: bundledFile
-        , map: path.basename(bundledMap)
-        , transformPaths: function (filePath) {
-            return path.relative(fixtures.dir, filePath);
-          }
-        })
-      , d = domain.create();
-
-    bundle.add( fixtures.entryScript('complex file') );
-    bundle.transform(minifier.transformer);
-
-    // We don't expect any errors
-    d.on('error', function (e) {
-      assert.fail('there should be no errors, but this happened: ' + e);
-    });
-
-    // Try to consume output, should trigger error inside domain
-    d.run(function () {
-      bundle.bundle({debug: true})
-      .pipe(minifier.consumer(function (code, map) {
-        assert.ok('the consumer callback was called');
-
-        var consumer = new SMConsumer(map);
-
-        if(process.env.debug) {
-          var bundledPage = path.join(path.dirname(bundledFile), 'index.html');
-          console.log(' [DEBUG] Writing output to fixture directory');
-          console.log('  bundle: ' + path.relative(process.cwd(), bundledFile));
-          console.log('  map:    ' + path.relative(process.cwd(), bundledMap));
-          console.log('  open "' + path.relative(process.cwd(), bundledPage) + '" in your browser dev tools');
-
-          fs.writeFileSync(bundledFile, code);
-          fs.writeFileSync(bundledMap, map);
-        }
-
-        next();
-      }));
-    });
-  }
+, 'transforms complex sourcemap': testSourcemap('complex file')
+, 'transforms sourcemap with native libs': testSourcemap('native libs')
 };
 
 module.exports = tests;
