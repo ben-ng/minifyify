@@ -5,23 +5,31 @@
   "keywords": [
     "uglify",
     "browserify",
+    "transform",
     "minify",
+    "envify",
+    "uglifyify",
     "compress"
   ],
-  "version": "0.0.3",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
   },
-  "main": "./index.js",
+  "main": "./lib/index.js",
   "dependencies": {
     "concat-stream": "1.0.x",
     "atob": "1.1.x",
     "source-map": "0.1.x",
-    "uglify-js": "2.3.x"
+    "uglify-js": "2.3.x",
+    "through": "2.3.x",
+    "lodash": "1.3.x"
   },
   "scripts": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "browserify": "latest"
+  , "jake": "latest"
+  },
   "optionalDependencies": {},
   "engines": {
     "node": "0.10.x"
