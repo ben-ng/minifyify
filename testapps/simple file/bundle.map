@@ -1,0 +1,1 @@
+{"version":3,"file":"bundle.js","sources":["simple file/entry.js"],"names":["myString","Array","join","console","log"],"mappings":";AAAA,GAAIA,UAAWC,MAAMC,MAAM,WAAY,KAAM,UAE7CC,SAAQC,IAAIJ","sourcesContent":["var myString = Array.join(['stairway', 'to', 'heaven']);\n\nconsole.log(myString);\n"]}
