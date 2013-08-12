@@ -1,9 +1,12 @@
 var optimize = require('../lib/optimize')
+  , decouple = require('../lib/decouple')
   , fixtures = require('./fixtures')
   , browserify = require('browserify')
   , assert = require('assert')
+  , path = require('path')
   , fs = require('fs')
   , _ = require('lodash')
+  , SMConsumer = require('source-map').SourceMapConsumer
   , pad = function (index) {
       var n = new String(index).split('');
       while(n.length<5) {
@@ -70,6 +73,29 @@ tests['optimizes complex file'] = function (next) {
 
     fs.writeFileSync(fixtures.bundledFile('complex file'), minified.code);
     fs.writeFileSync(fixtures.bundledMap('complex file'), minified.map);
+
+    next();
+  });
+};
+
+tests['optimizes backbone app'] = function (next) {
+  var bundle = new browserify();
+
+  bundle.add(fixtures.entryScript('backbone app'));
+
+  bundle.transform(require('hbsfy'));
+
+  bundle.bundle({debug: true}, function (err, data) {
+    assert.ifError(err);
+
+    var minified = optimize(data, {
+      map: 'bundle.map'
+    , file: 'bundle.js'
+    , compressPaths: function (p) { return path.relative(fixtures.dir, p); }
+    });
+
+    fs.writeFileSync(fixtures.bundledFile('backbone app'), minified.code);
+    fs.writeFileSync(fixtures.bundledMap('backbone app'), minified.map);
 
     next();
   });

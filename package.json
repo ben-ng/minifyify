@@ -29,6 +29,9 @@
   "devDependencies": {
     "browserify": "latest"
   , "jake": "latest"
+  , "jquery-browserify": "1.8.x"
+  , "ribcage-view": "0.0.x"
+  , "hbsfy": "0.1.x"
   },
   "optionalDependencies": {},
   "engines": {
