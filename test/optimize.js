@@ -39,7 +39,7 @@ var optimize = require('../lib/optimize')
         var minified = optimize(data, {
           map: 'bundle.map'
         , file: 'bundle.js'
-        , compressPaths: function (p) { return path.relative(fixtures.dir, p); }
+        , compressPaths: function (p) { return path.relative(path.dirname(fixtures.entryScript(fixtureName)), p); }
         });
 
         utils.file.mkdirP(fixtures.bundledDir(fixtureName));
