@@ -40,11 +40,13 @@ var optimize = require('../lib/optimize')
           map: 'bundle.map'
         , file: 'bundle.js'
         , compressPaths: function (p) {
-            if(p.indexOf('../../../node_modules')>=0) {
-              return p.replace(/\.\.\/\.\.\/\.\.\/node_modules/,'../../node_modules');
+            var compressed = path.relative(path.dirname(fixtures.entryScript(fixtureName)), p);
+
+            if(compressed.indexOf('../../../node_modules')===0) {
+              return compressed.replace(/\.\.\/\.\.\/\.\.\/node_modules/,'../../node_modules');
             }
             else {
-              return path.relative(path.dirname(fixtures.entryScript(fixtureName)), p);
+              return compressed;
             }
           }
         });
