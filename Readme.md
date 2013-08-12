@@ -16,7 +16,18 @@ Minifyify minifies your bundle and pulls the source map out into a separate file
 ```js
 var browserify = require('browserify')
   , minifyify = require('minifyify')
-  , bundle = new browserify();
+  , path = require('path')
+  , bundle = new browserify()
+  , opts = {
+      // The URL the source is available at
+      file: '/bundle.js'
+      // The URL this map is available at
+    , map: '/bundle.map'
+      // Use this option to compress paths
+    , compressPaths: function (p) {
+        return path.relative('./www', p);
+      }
+    };
 
 bundle.add('entryScript.js');
 
@@ -27,7 +38,7 @@ bundle.bundle({debug: true})
 .pipe(minifyify(function(code, map) {
   fs.writeFileSync('www/bundle.js', code);
   fs.writeFileSync('www/bundle.map', map);
-}));
+}, opts));
 ```
 
 ## License
