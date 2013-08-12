@@ -36,7 +36,7 @@ var optimize = require('../lib/optimize')
       bundle.bundle({debug: true}, function (err, data) {
         assert.ifError(err);
 
-        var minified = optimize(data, {
+        optimize(data, {
           map: 'bundle.map'
         , file: 'bundle.js'
         , compressPaths: function (p) {
@@ -49,19 +49,19 @@ var optimize = require('../lib/optimize')
               return compressed;
             }
           }
+        }, function (code, map) {
+          utils.file.mkdirP(fixtures.bundledDir(fixtureName));
+          utils.file.cpR(fixtures.scaffoldDir
+            , path.dirname(fixtures.scaffoldDir)
+            , {rename: path.basename(fixtures.bundledDir(fixtureName))});
+          utils.file.cpR(path.dirname(fixtures.entryScript(fixtureName))
+            , path.dirname(fixtures.scaffoldDir)
+            , {rename: path.basename(fixtures.bundledDir(fixtureName))});
+          fs.writeFileSync(fixtures.bundledFile(fixtureName), code);
+          fs.writeFileSync(fixtures.bundledMap(fixtureName), map);
+
+          next();
         });
-
-        utils.file.mkdirP(fixtures.bundledDir(fixtureName));
-        utils.file.cpR(fixtures.scaffoldDir
-          , path.dirname(fixtures.scaffoldDir)
-          , {rename: path.basename(fixtures.bundledDir(fixtureName))});
-        utils.file.cpR(path.dirname(fixtures.entryScript(fixtureName))
-          , path.dirname(fixtures.scaffoldDir)
-          , {rename: path.basename(fixtures.bundledDir(fixtureName))});
-        fs.writeFileSync(fixtures.bundledFile(fixtureName), minified.code);
-        fs.writeFileSync(fixtures.bundledMap(fixtureName), minified.map);
-
-        next();
       });
     }
 

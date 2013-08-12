@@ -24,15 +24,16 @@
     "uglify-js": "2.3.x",
     "through": "2.3.x",
     "lodash": "1.3.x",
-    "jquery-browserify": "1.8.x",
-    "utilities": "0.0.x"
+    "utilities": "0.0.x",
+    "gcc": "1.0.x"
   },
   "scripts": {},
   "devDependencies": {
-    "browserify": "latest"
-  , "jake": "latest"
-  , "backbone": "1.0.x"
-  , "hbsfy": "0.1.x"
+    "browserify": "latest",
+    "jake": "latest",
+    "backbone": "1.0.x",
+    "hbsfy": "0.1.x",
+    "jquery-browserify": "1.8.x"
   },
   "optionalDependencies": {},
   "engines": {
