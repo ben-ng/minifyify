@@ -6,7 +6,10 @@ var optimize = require('../lib/optimize')
   , path = require('path')
   , fs = require('fs')
   , _ = require('lodash')
+  , utils = require('utilities')
   , SMConsumer = require('source-map').SourceMapConsumer
+
+    // Debugging functions, pay no mind...
   , pad = function (index) {
       var n = new String(index).split('');
       while(n.length<5) {
@@ -23,82 +26,48 @@ var optimize = require('../lib/optimize')
 
       process.stdout.write('\n');
     }
+
+    // Bundles a file and writes it to the build dir
+  , buildBundle = function (fixtureName, next) {
+      var bundle = new browserify();
+
+      bundle.add(fixtures.entryScript(fixtureName));
+
+      bundle.bundle({debug: true}, function (err, data) {
+        assert.ifError(err);
+
+        var minified = optimize(data, {
+          map: 'bundle.map'
+        , file: 'bundle.js'
+        , compressPaths: function (p) { return path.relative(fixtures.dir, p); }
+        });
+
+        utils.file.mkdirP(fixtures.bundledDir(fixtureName));
+        utils.file.cpR(fixtures.scaffoldDir
+          , path.dirname(fixtures.scaffoldDir)
+          , {rename: path.basename(fixtures.bundledDir(fixtureName))});
+        utils.file.cpR(path.dirname(fixtures.entryScript(fixtureName))
+          , path.dirname(fixtures.scaffoldDir)
+          , {rename: path.basename(fixtures.bundledDir(fixtureName))});
+        fs.writeFileSync(fixtures.bundledFile(fixtureName), minified.code);
+        fs.writeFileSync(fixtures.bundledMap(fixtureName), minified.map);
+
+        next();
+      });
+    }
+
   , tests = {};
 
 tests['optimizes simple file'] = function (next) {
-  var bundle = new browserify();
-
-  bundle.add(fixtures.entryScript('simple file'));
-
-  bundle.bundle({debug: true}, function (err, data) {
-    assert.ifError(err);
-
-    var minified = optimize(data);
-
-    /*
-    console.log('---- Original File ----');
-    printLines(data);
-
-    console.log('---- Minified File ----');
-    printLines(minified.code);
-    */
-
-    fs.writeFileSync(fixtures.bundledFile('simple file'), minified.code);
-    fs.writeFileSync(fixtures.bundledMap('simple file'), minified.map);
-
-    next();
-  });
+  buildBundle('simple file', next);
 };
 
 tests['optimizes complex file'] = function (next) {
-  var bundle = new browserify();
-
-  bundle.add(fixtures.entryScript('complex file'));
-
-  bundle.bundle({debug: true}, function (err, data) {
-    assert.ifError(err);
-
-    var minified = optimize(data, {
-      map: 'bundle.map'
-    , file: 'bundle.js'
-    });
-
-    /*
-    console.log('---- Original File ----');
-    printLines(data);
-
-    console.log('---- Minified File ----');
-    printLines(minified.code);
-    */
-
-    fs.writeFileSync(fixtures.bundledFile('complex file'), minified.code);
-    fs.writeFileSync(fixtures.bundledMap('complex file'), minified.map);
-
-    next();
-  });
+  buildBundle('complex file', next);
 };
 
 tests['optimizes backbone app'] = function (next) {
-  var bundle = new browserify();
-
-  bundle.add(fixtures.entryScript('backbone app'));
-
-  bundle.transform(require('hbsfy'));
-
-  bundle.bundle({debug: true}, function (err, data) {
-    assert.ifError(err);
-
-    var minified = optimize(data, {
-      map: 'bundle.map'
-    , file: 'bundle.js'
-    , compressPaths: function (p) { return path.relative(fixtures.dir, p); }
-    });
-
-    fs.writeFileSync(fixtures.bundledFile('backbone app'), minified.code);
-    fs.writeFileSync(fixtures.bundledMap('backbone app'), minified.map);
-
-    next();
-  });
+  buildBundle('backbone app', next);
 };
 
 module.exports = tests;
