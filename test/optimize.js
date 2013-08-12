@@ -75,6 +75,10 @@ tests['optimizes complex file'] = function (next) {
   buildBundle('complex file', next);
 };
 
+tests['optimizes native libs'] = function (next) {
+  buildBundle('native libs', next);
+};
+
 tests['optimizes backbone app'] = function (next) {
   buildBundle('backbone app', next);
 };
