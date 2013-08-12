@@ -25,5 +25,6 @@ module.exports = {
 , bundledDir: bundledDir
 , bundledMap: bundledMap
 , dir: FIXTURES_DIR
+, buildDir: BUILD_DIR
 , scaffoldDir:SCAFFOLD_DIR
 };
