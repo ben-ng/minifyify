@@ -6,66 +6,30 @@ var _ = require('lodash')
   , assert = require('assert')
   , request = require('request')
   , minify = require('../lib/minify')
+  , transform = require('../lib/transform')
   , deploy = require('./config/envoy')
-  , SM = require('source-map')
-  , SMConsumer = SM.SourceMapConsumer
-  , SMGenerator = SM.SourceMapGenerator
+
+  // Constants
+  , uuid = utils.string.uuid(5)
   , red = '\033[31m'
   , green = '\033[32m'
   , reset = '\033[0m'
-  , tests = {}
-  , compilers = ['gcc', 'uglify']
   , validatorUrl = 'https://sourcemap-validator.herokuapp.com/validate.json?url='
   , fileUrl = 'http://travisci.s3-website-us-east-1.amazonaws.com/'
-  , transform
+  , compilers = ['gcc', 'uglify']
+
+  // Helpers
   , compileLib
   , validate
-  , testLib;
+  , testLib
 
-/**
-* Transforms source code and a map
-* opts [Object] - {file: string, map: string, compressPaths: function}
-* code [String] - The code to transform
-* map [String] - The map to tranform
-* cb [Function] - Called after transformation is done
-*/
-transform = function (opts, code, map, cb) {
-  var consumer = new SMConsumer(map)
-    , generator = new SMGenerator({file: opts.file});
-
-  consumer.eachMapping(function (mapping) {
-    if(!mapping.source) {
-      console.error(red+'WARNING: Mapping needs a source\n\
-GCC might have encountered a license or unremovable comment\n\
-Remove it to get rid of this warning!\n'+JSON.stringify(mapping,null,2)+reset);
-      return;
+  // Tests
+  , tests = {
+    "before": function () {
+      utils.file.rmRf( path.join(fixtures.buildDir, 'libraries') );
+      utils.file.mkdirP( path.join(fixtures.buildDir, 'libraries') );
     }
-
-    var newMapping = {
-        generated: {
-          line: mapping.generatedLine
-        , column: mapping.generatedColumn
-        }
-      , original: {
-          line: mapping.originalLine
-        , column: mapping.originalColumn
-        }
-      , source: opts.compressPaths(mapping.source)
-      , name: mapping.name
-      };
-
-    src=mapping.source;
-  });
-
-  generator.setSourceContent(opts.compressPaths(opts.file), code);
-
-  code = code + '\n//# sourceMappingURL=' + opts.map + '\n';
-  map = JSON.parse( generator.toString() );
-  map.file = opts.file;
-  map = JSON.stringify(map);
-
-  cb(code, map);
-};
+  };
 
 /**
 * Builds a lib into the build dir
@@ -80,8 +44,10 @@ compileLib = function (filename, cb) {
 
   // Helper function, compiles a single file
   compile = function (compiler, next) {
-    var srcDest = path.join(fixtures.buildDir, 'libraries', filename + '.' + compiler + '.min.js')
-      , mapDest = path.join(fixtures.buildDir, 'libraries', filename + '.' + compiler + '.map.json')
+    var srcDest = path.join(fixtures.buildDir
+        , 'libraries', filename + '.' + uuid + '.' + compiler + '.min.js')
+      , mapDest = path.join(fixtures.buildDir
+        , 'libraries', filename + '.' + uuid + '.' + compiler + '.map.json')
       , opts = {
           file: path.basename(filename)
         , map: path.basename(mapDest)
@@ -129,7 +95,8 @@ compileLib = function (filename, cb) {
 validateLib = function (filename, compiler, cb) {
   // Validate!
   request.get({
-        url: validatorUrl + encodeURIComponent(fileUrl + filename + '.' + compiler + '.min.js')
+        url: validatorUrl + encodeURIComponent(fileUrl
+           + filename + '.' + uuid + '.' + compiler + '.min.js')
       , json: true
       }
     , function (err, resp, body) {
