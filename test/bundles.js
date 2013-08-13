@@ -11,7 +11,6 @@ var _ = require('lodash')
 
   // Constants.. I want destructuring..
   , config = require('./config')
-  , uuid = utils.string.uuid(5)
   , red = config.red
   , green = config.green
   , reset = config.reset
@@ -39,12 +38,12 @@ compileApp = function (appname, cb) {
     , bundle = new browserify()
     , appDir = path.join(fixtures.buildDir, appname)
     , encAppDir = path.join(fixtures.buildDir, encAppname)
-    , filename = fixtures.bundledFile(appname, uuid)
-    , mapname = fixtures.bundledMap(appname, uuid)
+    , filename = fixtures.bundledFile(appname)
+    , mapname = fixtures.bundledMap(appname)
     , destdir = fixtures.bundledDir(appname)
     , opts = {
-        file: path.relative(encAppDir, fixtures.bundledFile(encAppname, uuid))
-      , map: path.relative(encAppDir, fixtures.bundledMap(encAppname, uuid))
+        file: path.relative(encAppDir, fixtures.bundledFile(encAppname))
+      , map: path.relative(encAppDir, fixtures.bundledMap(encAppname))
       , compressPaths: function (p) {
           try {
             return path.relative( path.join(fixtures.dir, appname), p );
@@ -78,7 +77,7 @@ validateApp = function (appname, compiler, cb) {
   // Validate!
   request.get({
         url: validatorUrl + encodeURIComponent(fileUrl
-           + encodeURIComponent(appname) + '/bundle.' + uuid + '.min.js')
+           + encodeURIComponent(appname) + '/bundle.min.js')
       , json: true
       }
     , function (err, resp, body) {

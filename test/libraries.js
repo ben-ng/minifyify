@@ -11,7 +11,6 @@ var _ = require('lodash')
 
   // Constants.. I want destructuring..
   , config = require('./config')
-  , uuid = utils.string.uuid(5)
   , red = config.red
   , green = config.green
   , reset = config.reset
@@ -48,9 +47,9 @@ compileLib = function (filename, cb) {
   // Helper function, compiles a single file
   compile = function (compiler, next) {
     var srcDest = path.join(fixtures.buildDir
-        , 'libraries', filename + '.' + uuid + '.' + compiler + '.min.js')
+        , 'libraries', filename + '.' + compiler + '.min.js')
       , mapDest = path.join(fixtures.buildDir
-        , 'libraries', filename + '.' + uuid + '.' + compiler + '.map.json')
+        , 'libraries', filename + '.' + compiler + '.map.json')
       , opts = {
           file: path.basename(filename)
         , map: path.basename(mapDest)
@@ -99,7 +98,7 @@ validateLib = function (filename, compiler, cb) {
   // Validate!
   request.get({
         url: validatorUrl + encodeURIComponent(fileUrl
-           + filename + '.' + uuid + '.' + compiler + '.min.js')
+           + filename + '.' + compiler + '.min.js')
       , json: true
       }
     , function (err, resp, body) {

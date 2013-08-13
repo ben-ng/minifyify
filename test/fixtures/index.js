@@ -9,10 +9,10 @@ var path = require('path')
       return path.join(BUILD_DIR, 'apps', name);
     }
   , bundledFile = function (name, uuid) {
-      return path.join(BUILD_DIR, name, 'bundle.'+uuid+'.min.js');
+      return path.join(BUILD_DIR, name, 'bundle.min.js');
     }
   , bundledMap = function (name, uuid) {
-      return path.join(BUILD_DIR, name, 'bundle.'+uuid+'.map.json');
+      return path.join(BUILD_DIR, name, 'bundle.map.json');
     }
   , simplifyPath = function (filePath) {
       return path.relative(FIXTURES_DIR, filePath);
