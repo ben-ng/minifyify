@@ -9,26 +9,29 @@ var _ = require('lodash')
   , transform = require('../lib/transform')
   , deploy = require('./config/envoy')
 
-  // Constants
+  // Constants.. I want destructuring..
+  , config = require('./config')
   , uuid = utils.string.uuid(5)
-  , red = '\033[31m'
-  , green = '\033[32m'
-  , reset = '\033[0m'
-  , validatorUrl = 'https://sourcemap-validator.herokuapp.com/validate.json?url='
-  , fileUrl = 'http://travisci.s3-website-us-east-1.amazonaws.com/'
-  , compilers = ['gcc', 'uglify']
+  , red = config.red
+  , green = config.green
+  , reset = config.reset
+  , validatorUrl = config.validatorUrl
+  , fileUrl = config.fileUrl
+  , compilers = config.compilers
 
   // Helpers
   , compileLib
   , validate
   , testLib
+  , clean = function () {
+      utils.file.rmRf( path.join(fixtures.buildDir, 'libraries'), {silent: true});
+      utils.file.mkdirP( path.join(fixtures.buildDir, 'libraries'), {silent: true});
+    }
 
   // Tests
   , tests = {
-    "before": function () {
-      utils.file.rmRf( path.join(fixtures.buildDir, 'libraries') );
-      utils.file.mkdirP( path.join(fixtures.buildDir, 'libraries') );
-    }
+    "before": clean
+  , "after": clean
   };
 
 /**

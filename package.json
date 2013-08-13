@@ -19,13 +19,15 @@
   "main": "./lib/index.js",
   "dependencies": {
     "concat-stream": "1.0.x",
-    "browserify-deoptimizer": "1.1.x",
+    "through": "2.3.x",
     "source-map": "0.1.x",
     "uglify-js": "2.3.x",
     "lodash": "1.3.x",
     "utilities": "0.0.x",
     "gcc": "1.0.x",
-    "osenv": "0.0.x"
+    "osenv": "0.0.x",
+    "btoa": "1.1.x",
+    "atob": "1.1.x"
   },
   "scripts": {
     "test": "jake test --trace"

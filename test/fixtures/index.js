@@ -6,13 +6,13 @@ var path = require('path')
       return path.join(FIXTURES_DIR, name, 'entry.js');
     }
   , bundledDir = function (name) {
-      return path.join(BUILD_DIR, name);
+      return path.join(BUILD_DIR, 'apps', name);
     }
-  , bundledFile = function (name) {
-      return path.join(BUILD_DIR, name, 'bundle.js');
+  , bundledFile = function (name, uuid) {
+      return path.join(BUILD_DIR, name, 'bundle.'+uuid+'.min.js');
     }
-  , bundledMap = function (name) {
-      return path.join(BUILD_DIR, name, 'bundle.map');
+  , bundledMap = function (name, uuid) {
+      return path.join(BUILD_DIR, name, 'bundle.'+uuid+'.map.json');
     }
   , simplifyPath = function (filePath) {
       return path.relative(FIXTURES_DIR, filePath);
