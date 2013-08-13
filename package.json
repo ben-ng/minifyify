@@ -26,7 +26,9 @@
     "utilities": "0.0.x",
     "gcc": "1.0.x"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "jake test --trace"
+  },
   "devDependencies": {
     "browserify": "latest",
     "jake": "latest",
