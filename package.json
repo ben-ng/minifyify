@@ -37,6 +37,7 @@
     "jake": "latest",
     "hbsfy": "0.1.x",
     "jquery-browserify":"1.8.x",
+    "backbone":"1.0.x",
     "envoy": "0.0.x",
     "request": "2.26.x"
   },
