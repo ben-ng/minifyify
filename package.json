@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
   },
-  "main": "./lib/index.js",
+  "main": "./lib/minifyify.js",
   "dependencies": {
     "concat-stream": "1.0.x",
     "through": "2.3.x",
