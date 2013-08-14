@@ -11,7 +11,7 @@
     "uglifyify",
     "compress"
   ],
-  "version": "0.2.1",
+  "version": "0.3.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
@@ -21,25 +21,20 @@
     "concat-stream": "1.0.x",
     "through": "2.3.x",
     "source-map": "0.1.x",
-    "uglify-js": "2.3.x",
+    "uglify-js": "https://github.com/ben-ng/UglifyJS2/archive/sourcemap-offset-fix.tar.gz",
     "lodash": "1.3.x",
     "utilities": "0.0.x",
-    "gcc": "1.0.x",
     "osenv": "0.0.x",
-    "btoa": "1.1.x",
-    "atob": "1.1.x"
+    "atob": "1.1.x",
+    "btoa": "1.1.x"
   },
   "scripts": {
     "test": "jake test --trace"
   },
   "devDependencies": {
-    "browserify": "latest",
+    "browserify": "https://github.com/ben-ng/node-browserify/archive/master.tar.gz",
     "jake": "latest",
-    "hbsfy": "0.1.x",
-    "jquery-browserify":"1.8.x",
-    "backbone":"1.0.x",
-    "envoy": "0.0.x",
-    "request": "2.26.x"
+    "backbone":"1.0.x"
   },
   "optionalDependencies": {},
   "engines": {

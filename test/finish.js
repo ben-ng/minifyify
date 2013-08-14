@@ -1,8 +1,8 @@
 var config = require('./config');
 
 module.exports = {
-  "finishup": function () {
-    console.log(config.green + 'All tests suceeded' + config.reset);
+  "success": function () {
+    console.log(config.green + 'All tests succeeded' + config.reset);
     process.exit(0);
   }
 };

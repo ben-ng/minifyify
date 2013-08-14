@@ -1,8 +1,3 @@
-env:
-  global:
-    - secure: "jWb4q8BGGPDo7Sbv8i87jTygRR9Xx24HNbq4rm2HCTTtm3HDf6fUZfvk/qIF\n8ixekhAUz/gI8UQC1xkZ4lSSx5wAePrEIPEbLY+APNNtvM9aT1y2qiSZ4lH2\nM6PjfWlDGnVK63wpGt16eE3qXXXXjdZAzBu2vifYa+1mpm6HS54="
-    - secure: "aAJrCvNb+4dbBr9POvr6uBhZOcEG7GTqlZQ+n8RJq+0XPyD6pgStDb7xN4Dd\nA5TxpehcERvup20C8Un3IjULEUZzGD6kq50YbCsSgXNHrjbo55PlNarVCJ+h\nHKKY/S3fZUBBRjCalwGpN9ZeMobCyYSYeKz6+Djh0Q/lqMzeL8c="
-
 language: node_js
 
 node_js:

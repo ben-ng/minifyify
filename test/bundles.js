@@ -4,10 +4,9 @@ var _ = require('lodash')
   , fs = require('fs')
   , path = require('path')
   , assert = require('assert')
-  , request = require('request')
   , browserify = require('browserify')
+  , validate = require('../lib/validate')
   , minifyify = require('../lib/minifyify')
-  , deploy = require('./config/envoy')
 
   // Constants.. I want destructuring..
   , config = require('./config')
@@ -30,7 +29,6 @@ var _ = require('lodash')
   // Tests
   , tests = {
       "before": clean
-    , "after": clean
     };
 
 compileApp = function (appname, cb) {
@@ -49,15 +47,14 @@ compileApp = function (appname, cb) {
             return path.relative( path.join(fixtures.dir, appname), p );
           }
           catch (e) {
-            console.error(p);
-            throw new Error('Invalid path');
+            throw new Error('Invalid path: ' + e);
           }
         }
       };
 
   bundle.add(fixtures.entryScript(appname));
 
-  minifyify(bundle, opts, function (code, map) {
+  minifyify(bundle, opts, function (code, map, sourcesContent) {
     utils.file.mkdirP(destdir)
     utils.file.cpR(fixtures.scaffoldDir
       , path.join(fixtures.buildDir, 'apps'), {rename:appname, silent:true});
@@ -66,33 +63,8 @@ compileApp = function (appname, cb) {
     fs.writeFileSync( path.join(destdir, path.basename(filename)), code );
     fs.writeFileSync( path.join(destdir, path.basename(mapname)), map );
 
-    cb();
+    cb(code, map, sourcesContent);
   });
-};
-
-/**
-* Validates an app
-*/
-validateApp = function (appname, compiler, cb) {
-  // Validate!
-  request.get({
-        url: validatorUrl + encodeURIComponent(fileUrl
-           + encodeURIComponent(appname) + '/bundle.min.js')
-      , json: true
-      }
-    , function (err, resp, body) {
-      assert.ifError(err);
-      assert.strictEqual(body.report.warnings.length, 0
-        , red+String.fromCharCode(parseInt(2192,16)) +' expected zero '+compiler+' warnings, got:\n'
-          + JSON.stringify(body.report.warnings, null, 2) + reset);
-      assert.strictEqual(body.report.errors.length, 0
-        , red+String.fromCharCode(parseInt(2192,16)) +' expected zero '+compiler+' errors, got:\n'
-          + JSON.stringify(body.report.errors, null, 2) + reset);
-
-      console.log(green+String.fromCharCode(parseInt(2192,16)) +' '+ compiler +' '+ String.fromCharCode(parseInt(2713,16))+reset);
-
-      cb();
-    });
 };
 
 /**
@@ -100,25 +72,11 @@ validateApp = function (appname, compiler, cb) {
 */
 testApp = function(appname, cb) {
   // Compile lib
-  compileApp(appname, function () {
-    // Deploy the directory
-    deploy(path.join(fixtures.buildDir, 'apps'), function (err, log) {
-      assert.ifError(err);
+  compileApp(appname, function (code, map, sourcesContent) {
+    assert.doesNotThrow(function () {
+      validate.validate(sourcesContent, code, map, 'uglify');
 
-      var chain
-        , chainParams = [];
-
-      _.each(compilers, function (compiler) {
-        chainParams.push({
-          func: validateApp
-        , args: [appname, compiler]
-        , callback: null
-        });
-      });
-
-      chain = new utils.async.AsyncChain(chainParams);
-      chain.last = cb;
-      chain.run();
+      cb();
     });
   });
 };

@@ -4,10 +4,9 @@ var _ = require('lodash')
   , fs = require('fs')
   , path = require('path')
   , assert = require('assert')
-  , request = require('request')
+  , validate = require('../lib/validate')
   , minify = require('../lib/minify')
-  , transform = require('../lib/transform')
-  , deploy = require('./config/envoy')
+  , enhanceMap = require('../lib/enhance')
 
   // Constants.. I want destructuring..
   , config = require('./config')
@@ -30,7 +29,6 @@ var _ = require('lodash')
   // Tests
   , tests = {
     "before": clean
-  , "after": clean
   };
 
 /**
@@ -42,17 +40,20 @@ compileLib = function (filename, cb) {
   var file = path.join(fixtures.dir, 'libraries', filename + '.js')
     , chain
     , chainParams = []
+    , srcs = []
     , compile;
 
   // Helper function, compiles a single file
   compile = function (compiler, next) {
     var srcDest = path.join(fixtures.buildDir
-        , 'libraries', filename + '.' + compiler + '.min.js')
-      , mapDest = path.join(fixtures.buildDir
-        , 'libraries', filename + '.' + compiler + '.map.json')
+          , 'libraries', filename + '.' + compiler + '.min.js')
+        origSrcDest = path.join(fixtures.buildDir
+          , 'libraries', filename + '.js')
+        , mapDest = path.join(fixtures.buildDir
+          , 'libraries', filename + '.' + compiler + '.map.json')
       , opts = {
-          file: path.basename(filename)
-        , map: path.basename(mapDest)
+          file: filename + '.js'
+        , map: filename + '.' + compiler + '.map.json'
         , compressPaths: function (p) {
             try {
               return path.relative( path.join(fixtures.dir, 'libraries'), p );
@@ -65,14 +66,22 @@ compileLib = function (filename, cb) {
         }
       , data = fs.readFileSync(file).toString();
 
-    minify[compiler](data, function (fcode, fmap) {
-      // Compress paths and set comments/file
-      transform(opts, fcode, fmap, function (code, map) {
-        fs.writeFileSync(srcDest, code);
-        fs.writeFileSync(mapDest, map);
+    //data = strip(data);
 
-        next();
-      });
+    minify[compiler](data, function (code, map) {
+      // Compress paths and set comments/file
+
+      map = enhanceMap(map, opts.file, data);
+      code+='\n//@ sourceMappingURL='+opts.map;
+      fs.writeFileSync(srcDest, code);
+      fs.writeFileSync(mapDest, map);
+
+      // Copy original source over
+      fs.writeFileSync(origSrcDest, data);
+
+      srcs.push({src:data, min:code, map:map, compiler:compiler});
+
+      next();
     });
   }
 
@@ -87,33 +96,10 @@ compileLib = function (filename, cb) {
   });
 
   chain = new utils.async.AsyncChain(chainParams);
-  chain.last=cb;
+  chain.last=function () {
+    cb(srcs)
+  };
   chain.run();
-};
-
-/**
-* Validates a lib
-*/
-validateLib = function (filename, compiler, cb) {
-  // Validate!
-  request.get({
-        url: validatorUrl + encodeURIComponent(fileUrl
-           + filename + '.' + compiler + '.min.js')
-      , json: true
-      }
-    , function (err, resp, body) {
-      assert.ifError(err);
-      assert.strictEqual(body.report.warnings.length, 0
-        , red+String.fromCharCode(parseInt(2192,16)) +' expected zero '+compiler+' warnings, got:\n'
-          + JSON.stringify(body.report.warnings, null, 2) + reset);
-      assert.strictEqual(body.report.errors.length, 0
-        , red+String.fromCharCode(parseInt(2192,16)) +' expected zero '+compiler+' errors, got:\n'
-          + JSON.stringify(body.report.errors, null, 2) + reset);
-
-      console.log(green+String.fromCharCode(parseInt(2192,16)) +' '+ compiler +' '+ String.fromCharCode(parseInt(2713,16))+reset);
-
-      cb();
-    });
 };
 
 /**
@@ -121,26 +107,16 @@ validateLib = function (filename, compiler, cb) {
 */
 testLib = function(filename, cb) {
   // Compile lib
-  compileLib(filename, function () {
-    // Deploy the directory
-    deploy(path.join(fixtures.buildDir, 'libraries'), function (err, log) {
-      assert.ifError(err);
-
-      var chain
-        , chainParams = [];
-
-      _.each(compilers, function (compiler) {
-        chainParams.push({
-          func: validateLib
-        , args: [filename, compiler]
-        , callback: null
-        });
+  compileLib(filename, function (srcs) {
+    assert.doesNotThrow(function () {
+      _.each(srcs, function (src) {
+        var srcObj = {}
+        srcObj[filename+'.js'] = src.src;
+        validate.validate(srcObj, src.min, src.map, src.compiler);
       });
-
-      chain = new utils.async.AsyncChain(chainParams);
-      chain.last = cb;
-      chain.run();
     });
+
+    cb();
   });
 };
 

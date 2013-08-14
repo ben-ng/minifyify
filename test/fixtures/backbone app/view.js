@@ -1,5 +1,5 @@
 var Backbone = require('backbone')
-  , $ = require('jquery-browserify')
+  , $ = require('../libraries/Jquery')
   , _ = require('lodash')
   , View;
 
