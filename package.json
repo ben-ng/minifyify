@@ -11,7 +11,7 @@
     "uglifyify",
     "compress"
   ],
-  "version": "0.3.0",
+  "version": "0.3.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
@@ -34,7 +34,7 @@
   "devDependencies": {
     "browserify": "https://github.com/ben-ng/node-browserify/archive/master.tar.gz",
     "jake": "latest",
-    "backbone":"1.0.x"
+    "backbone": "1.0.x"
   },
   "optionalDependencies": {},
   "engines": {
