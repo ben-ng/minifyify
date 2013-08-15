@@ -12,7 +12,7 @@ Minifyify minifies your bundle and pulls the source map out into a separate file
 
 This is still a work in progress, and as such there are a few known issues.
 
- * There is an issue in browserify that can result in invalid mappings. [Use this patched fork for the time being](https://github.com/ben-ng/node-browserify).
+ * There is an issue in `browserify` that can result in invalid mappings. [Use this patched fork for the time being](https://github.com/ben-ng/node-browserify).
  * Minifying with `hbsfy` results in a broken sourcemap (see: #6).
  * This uses a [patched uglifyjs2](https://github.com/mishoo/UglifyJS2/pull/268) for the time being.
 
