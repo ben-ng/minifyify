@@ -1,11 +1,10 @@
 var Backbone = require('backbone')
   , $ = require('../libraries/Jquery')
   , _ = require('lodash')
-  , tmpl = require('./view.hbs')
   , View;
 
 View = Backbone.View.extend({
-  template: tmpl
+  template: _.template('<%= message %>')
 , render: function () {
     this.el.innerHTML = (this.template({message: 'Hello From View Line 5'}));
 

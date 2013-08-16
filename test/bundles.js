@@ -74,6 +74,10 @@ testApp = function(appname, cb) {
   });
 };
 
+tests['transformed app'] = function (next) {
+  testApp('transformed app', next);
+};
+
 tests['simple file'] = function (next) {
   testApp('simple file', next);
 };

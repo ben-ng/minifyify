@@ -130,6 +130,10 @@ testLib = function(filename, cb) {
 };
 
 
+tests['Handlebars Runtime'] = function (next) {
+  testLib('HandlebarsRuntime', next);
+};
+
 tests['lo-dash'] = function (next) {
   testLib('Lodash', next);
 };
