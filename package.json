@@ -34,7 +34,9 @@
   "devDependencies": {
     "browserify": "https://github.com/ben-ng/node-browserify/archive/master.tar.gz",
     "jake": "latest",
-    "backbone": "1.0.x"
+    "backbone": "1.0.x",
+    "hbsfy": "0.1.x",
+    "handlebars-runtime": "1.0.x"
   },
   "optionalDependencies": {},
   "engines": {

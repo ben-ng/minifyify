@@ -42,14 +42,7 @@ compileApp = function (appname, cb) {
     , opts = {
         file: path.relative(encAppDir, fixtures.bundledFile(encAppname))
       , map: path.relative(encAppDir, fixtures.bundledMap(encAppname))
-      , compressPaths: function (p) {
-          try {
-            return path.relative( path.join(fixtures.dir, appname), p );
-          }
-          catch (e) {
-            throw new Error('Invalid path: ' + e);
-          }
-        }
+      , transforms: [require('hbsfy')]
       };
 
   bundle.add(fixtures.entryScript(appname));

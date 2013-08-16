@@ -7,6 +7,9 @@ var _ = require('lodash')
   , validate = require('../lib/validate')
   , minify = require('../lib/minify')
   , enhanceMap = require('../lib/enhance')
+  , atob = require('atob')
+  , btoa = require('btoa')
+  , osenv = require('osenv')
 
   // Constants.. I want destructuring..
   , config = require('./config')
@@ -54,15 +57,6 @@ compileLib = function (filename, cb) {
       , opts = {
           file: filename + '.js'
         , map: filename + '.' + compiler + '.map.json'
-        , compressPaths: function (p) {
-            try {
-              return path.relative( path.join(fixtures.dir, 'libraries'), p );
-            }
-            catch (e) {
-              console.error(p);
-              throw new Error('Invalid path');
-            }
-          }
         }
       , data = fs.readFileSync(file).toString();
 
@@ -108,16 +102,36 @@ compileLib = function (filename, cb) {
 testLib = function(filename, cb) {
   // Compile lib
   compileLib(filename, function (srcs) {
-    assert.doesNotThrow(function () {
       _.each(srcs, function (src) {
         var srcObj = {}
-        srcObj[filename+'.js'] = src.src;
-        validate.validate(srcObj, src.min, src.map, src.compiler);
-      });
-    });
+          , encoded
+          , roundtripped
+          , parsed
+          , tmpfile = path.join(osenv.tmpdir(), utils.string.uuid(5) + '-roundtrip.tmp');
 
-    cb();
+        assert.doesNotThrow(function () {
+          srcObj[filename+'.js'] = src.src;
+          validate.validate(srcObj, src.min, src.map, src.compiler);
+        }, 'map did not validate');
+
+        // Test roundtripping
+        encoded = btoa(src.map);
+
+        fs.writeFileSync(tmpfile, encoded);
+        roundtripped = fs.readFileSync(tmpfile);
+
+        assert.doesNotThrow(function () {
+          parsed = JSON.parse(atob(roundtripped.toString()));
+        }, 'map did not survive encoding/decoding roundtrip');
+      });
+
+      cb();
   });
+};
+
+
+tests['lo-dash'] = function (next) {
+  testLib('Lodash', next);
 };
 
 tests['Backbone.js'] = function (next) {
@@ -126,10 +140,6 @@ tests['Backbone.js'] = function (next) {
 
 tests['jQuery'] = function (next) {
   testLib('Jquery', next);
-};
-
-tests['lo-dash'] = function (next) {
-  testLib('Lodash', next);
 };
 
 tests['Underscore.js'] = function (next) {
