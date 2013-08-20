@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "browserify": "https://github.com/ben-ng/node-browserify/archive/master.tar.gz",
+    "jquery-browserify": "latest",
     "jake": "latest",
     "backbone": "1.0.x",
     "hbsfy": "0.1.x",
