@@ -32,7 +32,7 @@
     "test": "jake test --trace"
   },
   "devDependencies": {
-    "browserify": "https://github.com/ben-ng/node-browserify/archive/master.zip",
+    "browserify": "https://github.com/ben-ng/node-browserify/archive/master.tar.gz",
     "jake": "latest",
     "backbone": "1.0.x",
     "hbsfy": "0.1.x",
