@@ -36,6 +36,7 @@
     "jake": "latest",
     "backbone": "1.0.x",
     "hbsfy": "0.1.x",
+    "envify": "0.1.x",
     "handlebars-runtime": "1.0.x"
   },
   "optionalDependencies": {},

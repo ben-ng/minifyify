@@ -42,7 +42,7 @@ compileApp = function (appname, cb) {
     , opts = {
         file: path.relative(encAppDir, fixtures.bundledFile(encAppname))
       , map: path.relative(encAppDir, fixtures.bundledMap(encAppname))
-      , transforms: [require('hbsfy')]
+      , transforms: [require('hbsfy'), require('envify')]
       };
 
   bundle.add(fixtures.entryScript(appname));
