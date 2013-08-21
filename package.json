@@ -18,6 +18,7 @@
   },
   "main": "./lib/minifyify.js",
   "dependencies": {
+    "browserify": "https://github.com/ben-ng/node-browserify/archive/master.tar.gz",
     "concat-stream": "1.0.x",
     "through": "2.3.x",
     "source-map": "0.1.x",
@@ -32,7 +33,6 @@
     "test": "jake test --trace"
   },
   "devDependencies": {
-    "browserify": "https://github.com/ben-ng/node-browserify/archive/master.tar.gz",
     "jquery-browserify": "latest",
     "jake": "latest",
     "backbone": "1.0.x",
