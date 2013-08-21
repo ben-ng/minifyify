@@ -10,12 +10,14 @@ Minifyify minifies your bundle and pulls the source map out into a separate file
 
 ## Known Issues
 
-Browserify does not preserve the `source` key when combining source maps, which will cause minifyify to throw an exception. Use [my fork of Browserify](https://github.com/ben-ng/node-browserify/archive/master.zip) until [the PR](https://github.com/thlorenz/combine-source-map/pull/6) is merged.
+ * Browserify
+
+    Browserify does not preserve the `source` key when combining source maps, which will cause minifyify to throw an exception. Use [my fork of Browserify](https://github.com/ben-ng/node-browserify/archive/master.zip) (the easy way: `require('minifyify/browserify')`) until [the PR](https://github.com/thlorenz/combine-source-map/pull/6) is merged.
 
 ## Usage
 
 ```js
-var browserify = require('browserify')
+var browserify = require('minifyify/browserify')
   , minifyify = require('minifyify')
   , path = require('path')
   , bundle = new browserify()
@@ -26,9 +28,13 @@ var browserify = require('browserify')
       // The URL this map is available at
     , map: '/bundle.map'
 
-      // If you use transforms, specify them as an option
-      // Do *not* apply them to the bundle yourself!
-    , transforms: [ require('hbsfy') ]
+      // Do *not* apply transforms to the bundle yourself, and
+      // make sure that the key exactly matches the module name
+      // See [https://github.com/ben-ng/minifyify/issues/11](issue 11) for why
+    , transforms: {
+        hbsfy: require('hbsfy')
+      , envify: require('envify')
+      }
     };
 
 bundle.add('entryScript.js');

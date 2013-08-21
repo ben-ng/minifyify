@@ -42,7 +42,10 @@ compileApp = function (appname, cb) {
     , opts = {
         file: path.relative(encAppDir, fixtures.bundledFile(encAppname))
       , map: path.relative(encAppDir, fixtures.bundledMap(encAppname))
-      , transforms: [require('hbsfy'), require('envify')]
+      , transforms: {
+          hbsfy: require('hbsfy')
+        , envify: require('envify')
+        }
       };
 
   bundle.add(fixtures.entryScript(appname));
@@ -74,10 +77,6 @@ testApp = function(appname, cb) {
   });
 };
 
-tests['transformed app'] = function (next) {
-  testApp('transformed app', next);
-};
-
 tests['simple file'] = function (next) {
   testApp('simple file', next);
 };
@@ -92,6 +91,10 @@ tests['native libs'] = function (next) {
 
 tests['backbone app'] = function (next) {
   testApp('backbone app', next);
+};
+
+tests['transformed app'] = function (next) {
+  testApp('transformed app', next);
 };
 
 module.exports = tests;
