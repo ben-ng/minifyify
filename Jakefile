@@ -13,6 +13,7 @@ npmPublishTask('minifyify', function () {
     'Jakefile'
   , 'lib/**'
   , 'test/**'
+  , 'browserify.js'
   , 'package.json'
   , 'Readme.md'
   ]);
