@@ -13,7 +13,7 @@ Minifyify minifies your bundle and pulls the source map out into a separate file
 ```js
 var browserify = require('browserify')
   , minifyify = require('minifyify')
-  , path = require('path')
+  , fs = require('fs')
   , bundle = new browserify()
   , opts = {
       // The URL the source is available at
