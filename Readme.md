@@ -8,16 +8,10 @@ Before, browserify made you choose between sane debugging and sane load times. N
 
 Minifyify minifies your bundle and pulls the source map out into a separate file. Now you can deploy a minified bundle in production, and still have a sourcemap handy for when things inevitably break!
 
-## Known Issues
-
- * Browserify
-
-    Browserify does not preserve the `source` key when combining source maps, which will cause minifyify to throw an exception. Use [my fork of Browserify](https://github.com/ben-ng/node-browserify/archive/master.zip) (the easy way: `require('minifyify/browserify')`) until [the PR](https://github.com/thlorenz/combine-source-map/pull/6) is merged.
-
 ## Usage
 
 ```js
-var browserify = require('minifyify/browserify')
+var browserify = require('browserify')
   , minifyify = require('minifyify')
   , path = require('path')
   , bundle = new browserify()

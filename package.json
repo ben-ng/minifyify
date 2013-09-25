@@ -18,7 +18,7 @@
   },
   "main": "./lib/minifyify.js",
   "dependencies": {
-    "browserify": "https://github.com/ben-ng/node-browserify/archive/master.tar.gz",
+    "browserify": "2.33.x",
     "concat-stream": "1.0.x",
     "through": "2.3.x",
     "source-map": "0.1.x",
