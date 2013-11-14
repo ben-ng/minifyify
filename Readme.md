@@ -14,11 +14,12 @@ Minifyify minifies your bundle and pulls the source map out into a separate file
 var browserify = require('browserify')
   , minifyify = require('minifyify')
   , bundle = new browserify()
-  , out = fs.createWriteStream('out.min.map');
+  , out = fs.createWriteStream('bundle.min.js');
 
-bundle.add('entry.js');
-
-bundle.bundle({debug: true}).pipe(minifyify).pipe(out);
+bundle('entry.js')
+  .bundle({debug: true})
+  .pipe(minifyify)
+  .pipe(out);
 ```
 
 ## FAQ
