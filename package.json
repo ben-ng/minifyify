@@ -17,6 +17,9 @@
     "url": "git://github.com/ben-ng/minifyify.git"
   },
   "main": "./lib/minifyify.js",
+  "bin": {
+      "minifyify": "bin/cmd.js"
+  },
   "dependencies": {
     "through": "2.3.x",
     "concat-stream": "1.1.x",
@@ -25,7 +28,8 @@
     "lodash": "2.3.x",
     "utilities": "0.0.x",
     "atob": "1.1.x",
-    "btoa": "1.1.x"
+    "btoa": "1.1.x",
+    "jsesc": "0.4.x"
   },
   "scripts": {
     "test": "jake test --trace"
@@ -43,5 +47,6 @@
   "optionalDependencies": {},
   "engines": {
     "node": "0.10.x"
-  }
+  },
+  "license": "MIT"
 }

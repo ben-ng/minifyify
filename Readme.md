@@ -10,6 +10,10 @@ Minifyify minifies your bundle and pulls the source map out into a separate file
 
 ## Usage
 
+```sh
+browserify -d entry.js | minifyify > bundle.min.js
+```
+
 ```js
 var browserify = require('browserify')
   , minifyify = require('minifyify')
@@ -18,7 +22,7 @@ var browserify = require('browserify')
 
 bundle('entry.js')
   .bundle({debug: true})
-  .pipe(minifyify)
+  .pipe(minifyify())
   .pipe(out);
 ```
 

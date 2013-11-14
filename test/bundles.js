@@ -43,7 +43,7 @@ compileApp = function (appname, next) {
     .pipe(minifyify(opts))
     .pipe(concat(function (data) {
       var decoupled = decouple(data, {noConsumer: true, map: opts.map});
-      next({}, decoupled.code, decoupled.map);
+      next(decoupled.code, decoupled.map);
     }));
 };
 
@@ -59,7 +59,7 @@ testApp = function(appname, cb) {
     , destdir = fixtures.bundledDir(appname);
 
   // Compile lib
-  compileApp(appname, function (deps, min, map) {
+  compileApp(appname, function (min, map) {
     // Write to the build dir
     var appdir = path.join(fixtures.buildDir, 'apps', appname);
 
@@ -73,7 +73,7 @@ testApp = function(appname, cb) {
     fs.writeFileSync( path.join(destdir, path.basename(mapname)), map );
 
     assert.doesNotThrow(function () {
-      validate(deps, min, map, 'uglify');
+      validate(min, map);
     }, appname + ' should not throw');
 
     cb();

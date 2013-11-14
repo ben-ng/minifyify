@@ -1,5 +1,6 @@
 var t = new jake.TestTask('minifyify', function () {
   this.testFiles.include('test/bundles.js');
+  this.testFiles.include('test/cmd.js');
 });
 
 npmPublishTask('minifyify', function () {
