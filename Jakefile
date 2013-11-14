@@ -8,12 +8,11 @@ npmPublishTask('minifyify', function () {
     'Jakefile'
   , 'lib/**'
   , 'test/**'
-  , 'browserify.js'
+  , 'bin/*'
   , 'package.json'
   , 'Readme.md'
   ]);
   this.packageFiles.exclude([
     'test/build/apps'
-  , 'test/build/libraries'
   ]);
 });
