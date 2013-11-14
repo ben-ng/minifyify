@@ -22,7 +22,7 @@
     "concat-stream": "1.1.x",
     "source-map": "0.1.x",
     "sourcemap-validator": "0.0.x",
-    "uglify-js": "2.4.x",
+    "uglify-js": "https://github.com/ben-ng/UglifyJS2/archive/sourcemap-offset-fix.tar.gz",
     "lodash": "2.3.x",
     "utilities": "0.0.x",
     "atob": "1.1.x",
