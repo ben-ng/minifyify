@@ -11,14 +11,14 @@
     "uglifyify",
     "compress"
   ],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
   },
   "main": "./lib/minifyify.js",
   "bin": {
-      "minifyify": "bin/cmd.js"
+    "minifyify": "bin/cmd.js"
   },
   "dependencies": {
     "through": "2.3.x",
