@@ -38,7 +38,7 @@
     "browserify": "2.34.x",
     "jake": "0.7.x",
     "jquery-browserify": "latest",
-    "sourcemap-validator": "0.0.x",
+    "sourcemap-validator": "1.0.x",
     "backbone": "1.0.x",
     "hbsfy": "0.1.x",
     "envify": "0.1.x",
