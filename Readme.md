@@ -36,6 +36,18 @@ bundle('entry.js')
   .pipe(out); // output is a minified bundle with an inline source map
 ```
 
+You can also use callbacks to get your code and map in separate files
+
+```js
+bundle('entry.js')
+  .bundle({debug: true})
+  .pipe(minifyify(options, function (err, src, map) {
+    assert.ifError(err);
+    fs.writeFileSync('bundle.min.js', src);
+    fs.writeFileSync('bundle.min.map.json', map);
+  }))
+```
+
 ## Options
 
 ### [options.compressPath]
