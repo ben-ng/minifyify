@@ -53,6 +53,12 @@ Defaults to a no-op (absolute paths to all source files).
 
 ## FAQ
 
+ * Wait.. Why did my bundle get BIGGER??
+
+   It's not immediately obvious, but the more you minify code, the bigger the sourcemap gets. Browserify can get away with merely mapping lines to lines because it is going from uncompressed code to uncompressed code. Minifyify squishes multiple lines together, so the sourcemap has to carry more information.
+
+   **Pull the sourcemap out into a separate file and link to it from the minified source!**
+
  * How does this work?
 
    Minifyify runs UglifyJS on your bundle, and uses Browserify's inline sourcemap to create a new sourcemap that maps the minified code to the unbundled files.
