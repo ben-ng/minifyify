@@ -93,23 +93,23 @@ testApp = function(appname, method, cb) {
 };
 
 tests['simple file'] = function (next) {
-  testApp('simple file (stream)', 'stream', next);
+  testApp('simple file', 'stream', next);
 };
 
 tests['complex file'] = function (next) {
-  testApp('complex file (callback)', 'cb', next);
+  testApp('complex file', 'cb', next);
 };
 
 tests['native libs'] = function (next) {
-  testApp('native libs (stream)', 'stream', next);
+  testApp('native libs', 'stream', next);
 };
 
 tests['backbone app'] = function (next) {
-  testApp('backbone app (callback)', 'cb', next);
+  testApp('backbone app', 'cb', next);
 };
 
 tests['transformed app'] = function (next) {
-  testApp('transformed app (stream)', 'stream', next);
+  testApp('transformed app', 'stream', next);
 };
 
 module.exports = tests;
