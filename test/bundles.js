@@ -25,7 +25,7 @@ var _ = require('lodash')
       "before": clean
     };
 
-compileApp = function (appname, next) {
+compileApp = function (appname, method, next) {
   var bundle = new browserify()
     , deps = {}
     , opts = {
@@ -37,20 +37,32 @@ compileApp = function (appname, next) {
 
   bundle.add(fixtures.entryScript(appname));
 
-  bundle
-    .transform(require('hbsfy'))
-    .bundle({debug: true})
-    .pipe(minifyify(opts))
-    .pipe(concat(function (data) {
-      var decoupled = decouple(data, {noConsumer: true, map: opts.map});
-      next(decoupled.code, decoupled.map);
-    }));
+  bundle = bundle
+            .transform(require('hbsfy'))
+            .bundle({debug: true})
+
+  if(method == 'stream') {
+    bundle
+      .pipe(minifyify(opts))
+      .pipe(concat(function (data) {
+        var decoupled = decouple(data, {noConsumer: true, map: opts.map});
+        next(decoupled.code, decoupled.map);
+      }));
+  }
+  // Callback
+  else {
+    bundle
+      .pipe(minifyify(opts, function (err, src, map) {
+        assert.ifError(err);
+        next(src, map);
+      }));
+  }
 };
 
 /**
 * Builds, uploads, and validates an app
 */
-testApp = function(appname, cb) {
+testApp = function(appname, method, cb) {
   var encAppname = encodeURIComponent(appname)
     , appDir = path.join(fixtures.buildDir, appname)
     , encAppDir = path.join(fixtures.buildDir, encAppname)
@@ -59,7 +71,7 @@ testApp = function(appname, cb) {
     , destdir = fixtures.bundledDir(appname);
 
   // Compile lib
-  compileApp(appname, function (min, map) {
+  compileApp(appname, method, function (min, map) {
     // Write to the build dir
     var appdir = path.join(fixtures.buildDir, 'apps', appname);
 
@@ -81,23 +93,23 @@ testApp = function(appname, cb) {
 };
 
 tests['simple file'] = function (next) {
-  testApp('simple file', next);
+  testApp('simple file (stream)', 'stream', next);
 };
 
 tests['complex file'] = function (next) {
-  testApp('complex file', next);
+  testApp('complex file (callback)', 'cb', next);
 };
 
 tests['native libs'] = function (next) {
-  testApp('native libs', next);
+  testApp('native libs (stream)', 'stream', next);
 };
 
 tests['backbone app'] = function (next) {
-  testApp('backbone app', next);
+  testApp('backbone app (callback)', 'cb', next);
 };
 
 tests['transformed app'] = function (next) {
-  testApp('transformed app', next);
+  testApp('transformed app (stream)', 'stream', next);
 };
 
 module.exports = tests;

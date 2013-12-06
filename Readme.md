@@ -36,6 +36,18 @@ bundle('entry.js')
   .pipe(out); // output is a minified bundle with an inline source map
 ```
 
+You can also use callbacks to get your code and map in separate files
+
+```js
+bundle('entry.js')
+  .bundle({debug: true})
+  .pipe(minifyify(options, function (err, src, map) {
+    assert.ifError(err);
+    fs.writeFileSync('bundle.min.js', src);
+    fs.writeFileSync('bundle.min.map.json', map);
+  }))
+```
+
 ## Options
 
 ### [options.compressPath]
@@ -52,6 +64,12 @@ compressPaths: function (p) {
 Defaults to a no-op (absolute paths to all source files).
 
 ## FAQ
+
+ * Wait.. Why did my bundle get BIGGER??
+
+   It's not immediately obvious, but the more you minify code, the bigger the sourcemap gets. Browserify can get away with merely mapping lines to lines because it is going from uncompressed code to uncompressed code. Minifyify squishes multiple lines together, so the sourcemap has to carry more information.
+
+   **Pull the sourcemap out into a separate file and link to it from the minified source!**
 
  * How does this work?
 
