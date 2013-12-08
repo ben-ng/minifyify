@@ -2,9 +2,9 @@
   "author": "Ben Ng <me@benng.me> (http://benng.me)",
   "contributors": [
     {
-      "name" : "Jesús Leganés Combarro 'piranna'",
-      "email" : "piranna@gmail.com",
-      "url" : "http://pirannafs.blogspot.com.es"
+      "name": "Jesús Leganés Combarro 'piranna'",
+      "email": "piranna@gmail.com",
+      "url": "http://pirannafs.blogspot.com.es"
     }
   ],
   "name": "minifyify",
@@ -18,7 +18,7 @@
     "uglifyify",
     "compress"
   ],
-  "version": "1.1.1",
+  "version": "1.1.2",
   "repository": {
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
