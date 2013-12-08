@@ -1,5 +1,12 @@
 {
   "author": "Ben Ng <me@benng.me> (http://benng.me)",
+  "contributors": [
+    {
+      "name" : "Jesús Leganés Combarro 'piranna'",
+      "email" : "piranna@gmail.com",
+      "url" : "http://pirannafs.blogspot.com.es"
+    }
+  ],
   "name": "minifyify",
   "description": "Minify your browserify bundles without losing the sourcemap",
   "keywords": [
