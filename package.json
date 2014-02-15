@@ -18,7 +18,7 @@
     "uglifyify",
     "compress"
   ],
-  "version": "1.1.2",
+  "version": "2.0.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
@@ -38,11 +38,14 @@
     "btoa": "1.1.x",
     "jsesc": "0.4.x"
   },
+  "peerDependencies": {
+    "browserify": "~3.30.0"
+  },
   "scripts": {
     "test": "jake test --trace"
   },
   "devDependencies": {
-    "browserify": "2.34.x",
+    "browserify": "~3.30.0",
     "jake": "0.7.x",
     "jquery-browserify": "latest",
     "sourcemap-validator": "1.0.x",
