@@ -4,16 +4,13 @@ Minifyify
 
 [![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify)
 
+*Now with browserify 3 support*
+
 Before, browserify made you choose between sane debugging and sane load times. Now, you can have both.
 
 Minifyify takes your browserify bundle and minfies it. The magic: your code still maps back to the original, separate source files.
 
 Now you can deploy a minified bundle in production, and still have a sourcemap handy for when things inevitably break!
-
-## New in 1.0.x
- * Simpler, streaming API
- * A much more robust algorithm
- * Such speed, much performance
 
 ## Usage
 
