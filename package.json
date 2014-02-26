@@ -39,7 +39,7 @@
     "jsesc": "0.4.x"
   },
   "peerDependencies": {
-    "browserify": "~3.30.0"
+    "browserify": "3.x.x"
   },
   "scripts": {
     "test": "jake test --trace"
