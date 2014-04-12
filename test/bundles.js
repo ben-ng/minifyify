@@ -1,6 +1,4 @@
-var _ = require('lodash')
-  , concat = require('concat-stream')
-  , through = require('through')
+var concat = require('concat-stream')
   , fixtures = require('./fixtures')
   , decouple = require('../lib/decouple')
   , utils = require('utilities')
@@ -13,7 +11,6 @@ var _ = require('lodash')
 
   // Helpers
   , compileApp
-  , validateApp
   , testApp
   , clean = function () {
       utils.file.rmRf( path.join(fixtures.buildDir, 'apps'), {silent: true});
@@ -25,21 +22,26 @@ var _ = require('lodash')
       "before": clean
     };
 
-compileApp = function (appname, method, next) {
+compileApp = function (appname, method, map, next) {
+
+  if(typeof map == 'function') {
+    next = map;
+    map = 'bundle.map.json';
+  }
+
   var bundle = new browserify()
-    , deps = {}
     , opts = {
         compressPaths: function (p) {
           return path.relative(path.join(__dirname, 'fixtures', appname), p);
         }
-      , map: 'bundle.map.json'
+      , map: map
       };
 
   bundle.add(fixtures.entryScript(appname));
 
   bundle = bundle
             .transform(require('hbsfy'))
-            .bundle({debug: true})
+            .bundle({debug: map !== false})
 
   if(method == 'stream') {
     bundle
@@ -63,10 +65,7 @@ compileApp = function (appname, method, next) {
 * Builds, uploads, and validates an app
 */
 testApp = function(appname, method, cb) {
-  var encAppname = encodeURIComponent(appname)
-    , appDir = path.join(fixtures.buildDir, appname)
-    , encAppDir = path.join(fixtures.buildDir, encAppname)
-    , filename = fixtures.bundledFile(appname)
+  var filename = fixtures.bundledFile(appname)
     , mapname = fixtures.bundledMap(appname)
     , destdir = fixtures.bundledDir(appname);
 
@@ -110,6 +109,14 @@ tests['backbone app'] = function (next) {
 
 tests['transformed app'] = function (next) {
   testApp('transformed app', 'stream', next);
+};
+
+tests['opts.map = false cb'] = function (next) {
+  compileApp('simple file', 'cb', false, function (min, map) {
+    assert.ok(min);
+    assert.ok(map == null);
+    next();
+  });
 };
 
 module.exports = tests;
