@@ -62,6 +62,8 @@ compressPaths: function (p) {
 
 If you are using an external sourcemap, this is the path to it (string), which is added to the bottom of the minified file so browsers can correctly map. [More details here](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/#toc-howwork).
 
+Set to `false` to disable source maps.
+
 Defaults to a no-op (absolute paths to all source files).
 
 ## FAQ
