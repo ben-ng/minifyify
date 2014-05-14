@@ -43,7 +43,11 @@ compileApp = function (appname, map, next) {
             .transform(minifier.transformer)
             .bundle({debug: map !== false})
 
-  bundle.pipe(minifier.consumer(function (src, map) {
+  bundle.pipe(minifier.consumer(function (err, src, map) {
+    if(err) {
+      throw err;
+    }
+
     next(src, map)
   }));
 };
@@ -98,7 +102,7 @@ tests['transformed app'] = function (next) {
   testApp('transformed app', next);
 };
 
-tests['opts.map = false cb'] = function (next) {
+tests['opts.map = false should not produce a sourcemap'] = function (next) {
   compileApp('simple file', false, function (min, map) {
     assert.ok(min);
     assert.ok(map == null);
