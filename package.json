@@ -18,39 +18,35 @@
     "uglifyify",
     "compress"
   ],
-  "version": "2.4.1",
+  "version": "3.0.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
   },
   "main": "./lib",
-  "bin": {
-    "minifyify": "bin/cmd.js"
-  },
   "dependencies": {
     "through": "2.3.x",
     "concat-stream": "1.1.x",
     "source-map": "0.1.x",
-    "uglify-js": "https://github.com/ben-ng/UglifyJS2/archive/sourcemap-offset-fix.tar.gz",
-    "lodash": "2.3.x",
+    "uglify-js": "2.4.x",
+    "lodash": "2.4.x",
     "utilities": "0.0.x",
-    "atob": "1.1.x",
-    "btoa": "1.1.x",
     "jsesc": "0.4.x",
-    "exorcist": "^0.1.6"
+    "convert-source-map": "^0.3.3",
+    "minimist": "^0.1.0"
   },
   "scripts": {
     "test": "jake test --trace"
   },
   "devDependencies": {
-    "browserify": "4.x.x",
-    "jake": "0.7.x",
+    "browserify": "latest",
+    "jake": "latest",
     "jquery-browserify": "latest",
-    "sourcemap-validator": "1.0.x",
-    "backbone": "1.0.x",
-    "hbsfy": "1.3.x",
-    "envify": "1.2.x",
-    "handlebars-runtime": "1.0.x"
+    "sourcemap-validator": "latest",
+    "backbone": "latest",
+    "hbsfy": "latest",
+    "envify": "latest",
+    "handlebars-runtime": "latest"
   },
   "optionalDependencies": {},
   "engines": {

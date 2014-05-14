@@ -1,13 +1,12 @@
 var concat = require('concat-stream')
   , fixtures = require('./fixtures')
-  , decouple = require('../lib/decouple')
   , utils = require('utilities')
   , fs = require('fs')
   , path = require('path')
   , assert = require('assert')
   , browserify = require('browserify')
   , validate = require('sourcemap-validator')
-  , minifyify = require('../lib')
+  , Minifyify = require('../lib')
 
   // Helpers
   , compileApp
@@ -22,7 +21,7 @@ var concat = require('concat-stream')
       "before": clean
     };
 
-compileApp = function (appname, method, map, next) {
+compileApp = function (appname, map, next) {
 
   if(typeof map == 'function') {
     next = map;
@@ -35,42 +34,31 @@ compileApp = function (appname, method, map, next) {
           return path.relative(path.join(__dirname, 'fixtures', appname), p);
         }
       , map: map
-      };
+      }
+    , minifier = new Minifyify(opts);
 
   bundle.add(fixtures.entryScript(appname));
 
   bundle = bundle
             .transform(require('hbsfy'))
+            .transform(minifier.transformer)
             .bundle({debug: map !== false})
 
-  if(method == 'stream') {
-    bundle
-      .pipe(minifyify(opts))
-      .pipe(concat(function (data) {
-        var decoupled = decouple(data, {noConsumer: true, map: opts.map});
-        next(decoupled.code, decoupled.map);
-      }));
-  }
-  // Callback
-  else {
-    bundle
-      .pipe(minifyify(opts, function (err, src, map) {
-        assert.ifError(err);
-        next(src, map);
-      }));
-  }
+  bundle.pipe(minifier.consumer(function (src, map) {
+    next(src, map)
+  }));
 };
 
 /**
 * Builds, uploads, and validates an app
 */
-testApp = function(appname, method, cb) {
+testApp = function(appname, cb) {
   var filename = fixtures.bundledFile(appname)
     , mapname = fixtures.bundledMap(appname)
     , destdir = fixtures.bundledDir(appname);
 
   // Compile lib
-  compileApp(appname, method, function (min, map) {
+  compileApp(appname, function (min, map) {
     // Write to the build dir
     var appdir = path.join(fixtures.buildDir, 'apps', appname);
 
@@ -92,27 +80,27 @@ testApp = function(appname, method, cb) {
 };
 
 tests['simple file'] = function (next) {
-  testApp('simple file', 'stream', next);
+  testApp('simple file', next);
 };
 
 tests['complex file'] = function (next) {
-  testApp('complex file', 'cb', next);
+  testApp('complex file', next);
 };
 
 tests['native libs'] = function (next) {
-  testApp('native libs', 'stream', next);
+  testApp('native libs', next);
 };
 
 tests['backbone app'] = function (next) {
-  testApp('backbone app', 'cb', next);
+  testApp('backbone app', next);
 };
 
 tests['transformed app'] = function (next) {
-  testApp('transformed app', 'stream', next);
+  testApp('transformed app', next);
 };
 
 tests['opts.map = false cb'] = function (next) {
-  compileApp('simple file', 'cb', false, function (min, map) {
+  compileApp('simple file', false, function (min, map) {
     assert.ok(min);
     assert.ok(map == null);
     next();
