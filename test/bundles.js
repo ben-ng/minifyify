@@ -39,6 +39,7 @@ compileApp = function (appname, map, next) {
   bundle.add(fixtures.entryScript(appname));
 
   bundle = bundle
+            .transform(require('coffeeify'))
             .transform(require('hbsfy'))
             .transform(minifier.transformer)
             .bundle({debug: map !== false})
@@ -92,6 +93,10 @@ tests['complex file'] = function (next) {
 
 tests['native libs'] = function (next) {
   testApp('native libs', next);
+};
+
+tests['coffee app'] = function (next) {
+  testApp('coffee app', next);
 };
 
 tests['backbone app'] = function (next) {

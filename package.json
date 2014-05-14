@@ -31,12 +31,14 @@
     "lodash.bind": "2.4.x",
     "source-map": "0.1.x",
     "uglify-js": "2.4.x",
-    "convert-source-map": "^0.3.3"
+    "convert-source-map": "^0.3.3",
+    "tmp": "0.0.23"
   },
   "scripts": {
     "test": "jake test --trace"
   },
   "devDependencies": {
+    "coffeeify": "latest",
     "lodash.template": "latest",
     "jsesc": "latest",
     "utilities": "latest",
