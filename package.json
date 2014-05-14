@@ -26,19 +26,21 @@
   "main": "./lib",
   "dependencies": {
     "through": "2.3.x",
-    "concat-stream": "1.1.x",
+    "lodash.defaults": "2.4.x",
+    "lodash.forEach": "2.4.x",
+    "lodash.bind": "2.4.x",
     "source-map": "0.1.x",
     "uglify-js": "2.4.x",
-    "lodash": "2.4.x",
-    "utilities": "0.0.x",
-    "jsesc": "0.4.x",
-    "convert-source-map": "^0.3.3",
-    "minimist": "^0.1.0"
+    "convert-source-map": "^0.3.3"
   },
   "scripts": {
     "test": "jake test --trace"
   },
   "devDependencies": {
+    "lodash.template": "latest",
+    "jsesc": "latest",
+    "utilities": "latest",
+    "concat-stream": "latest",
     "browserify": "latest",
     "jake": "latest",
     "jquery-browserify": "latest",

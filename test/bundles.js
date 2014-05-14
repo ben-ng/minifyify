@@ -1,5 +1,4 @@
-var concat = require('concat-stream')
-  , fixtures = require('./fixtures')
+var fixtures = require('./fixtures')
   , utils = require('utilities')
   , fs = require('fs')
   , path = require('path')
