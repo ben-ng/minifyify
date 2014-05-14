@@ -4,7 +4,7 @@ Minifyify
 
 [![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify)
 
-*Now with browserify 4 support*
+*Now with Browserify 4 & CoffeeScript support*
 
 Before, browserify made you choose between sane debugging and sane load times. Now, you can have both.
 
@@ -23,13 +23,17 @@ var browserify = require('browserify')
 bundle = new browserify();
 minifier = new minifyify(options);
 
+// Your other transforms
+bundle.transform(require('coffeeify'));
+bundle.transform(require('hbsfy'));
+
+// Minifies code while tracking sourcemaps
+// {global: true} lets us also minify browser shims
+bundle.transform({global: true}, minifier.transform);
+
 bundle('entry.js')
   // Debug must be true for minifyify to work
   .bundle({debug: true})
-
-  // This transform minifies code and tracks sourcemaps
-  // {global: true} lets you also minify shims
-  .pipe({global: true}, minifier.transform)
 
    // Consume pulls the source map out of src and transforms the mappings
   .pipe(minifier.consume(function (err, src, map) {
