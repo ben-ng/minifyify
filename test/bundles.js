@@ -29,7 +29,7 @@ compileApp = function (appname, map, next) {
 
   var bundle = new browserify()
     , opts = {
-        compressPaths: function (p) {
+        compressPath: function (p) {
           return path.relative(path.join(__dirname, 'fixtures', appname), p);
         }
       , map: map

@@ -4,7 +4,7 @@ Minifyify
 
 [![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify)
 
-*Now with browserify 3 support*
+*Now with browserify 4 support*
 
 Before, browserify made you choose between sane debugging and sane load times. Now, you can have both.
 
@@ -14,35 +14,22 @@ Now you can deploy a minified bundle in production, and still have a sourcemap h
 
 ## Usage
 
-Bundle your app with browserify's debug option, then pipe it to minifyify.
-
-```sh
-browserify -d entry.js | minifyify > bundle.min.js
-```
-
 ```js
 var browserify = require('browserify')
   , minifyify = require('minifyify')
   , bundle = new browserify()
-  , out = fs.createWriteStream('bundle.min.js')
   , options // See docs;
 
-bundle('entry.js')
-  .bundle({debug: true})
-  .pipe(minifyify(options))
-  .pipe(out); // output is a minified bundle with an inline source map
-```
+minifier = new minifyify(options);
 
-You can also use callbacks to get your code and map in separate files
-
-```js
 bundle('entry.js')
-  .bundle({debug: true})
-  .pipe(minifyify(options, function (err, src, map) {
-    assert.ifError(err);
-    fs.writeFileSync('bundle.min.js', src);
-    fs.writeFileSync('bundle.min.map.json', map);
-  }))
+  .bundle({debug: true})     // Debug must be true for minifyify to work
+  .pipe(minifier.transform)  // This transform minifies code and tracks sourcemaps
+   // Consume pulls the source map out of src and transforms the mappings to be correct
+  .pipe(minifier.consume(function (err, src, map) {
+    // src and map are strings
+    // src has a comment pointing to map
+  }));
 ```
 
 ## Options
@@ -52,31 +39,33 @@ bundle('entry.js')
 Shorten the paths you see in the web inspector by defining a compression function.
 
 ```
-// A typical compressPaths function
-compressPaths: function (p) {
+// A typical compressPath function
+compressPath: function (p) {
   return path.relative('my-app-root', p);
 }
 ```
 
+Defaults to a no-op (absolute paths to all source files).
+
 ### [options.map]
 
-If you are using an external sourcemap, this is the path to it (string), which is added to the bottom of the minified file so browsers can correctly map. [More details here](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/#toc-howwork).
+This is added to the bottom of the minified source file, and should point to where the map will be accessible from on your server. [More details here](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/#toc-howwork).
+
+Example: If your bundle is at `mysite.com/bundle.js` and the map is at `mysite.com/map.js`, set `options.map = '/map.js'`
 
 Set to `false` to disable source maps.
 
-Defaults to a no-op (absolute paths to all source files).
-
 ## FAQ
 
- * Wait.. Why did my bundle get BIGGER??
+ * Wait.. Why did the total size (souce code + map) get BIGGER??
 
    It's not immediately obvious, but the more you minify code, the bigger the sourcemap gets. Browserify can get away with merely mapping lines to lines because it is going from uncompressed code to uncompressed code. Minifyify squishes multiple lines together, so the sourcemap has to carry more information.
 
-   **Pull the sourcemap out into a separate file and link to it from the minified source!**
+   This is OK because the sourcemap is in a separate file, which means your app will be snappy for your users as their browsers won't download the sourcemap.
 
  * How does this work?
 
-   Minifyify runs UglifyJS on your bundle, and uses Browserify's inline sourcemap to create a new sourcemap that maps the minified code to the unbundled files.
+   Minifyify runs UglifyJS on each file in your bundle, and uses browserify's sourcemap to translate
 
  * Why does the sourcemap cause my debugger to behave erratically?
 
@@ -95,7 +84,7 @@ Defaults to a no-op (absolute paths to all source files).
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Ben Ng
+Copyright (c) 2013-2014 Ben Ng
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
