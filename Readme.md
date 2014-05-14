@@ -17,15 +17,21 @@ Now you can deploy a minified bundle in production, and still have a sourcemap h
 ```js
 var browserify = require('browserify')
   , minifyify = require('minifyify')
-  , bundle = new browserify()
-  , options // See docs;
+  , bundle
+  , options // See docs below;
 
+bundle = new browserify();
 minifier = new minifyify(options);
 
 bundle('entry.js')
-  .bundle({debug: true})     // Debug must be true for minifyify to work
-  .pipe(minifier.transform)  // This transform minifies code and tracks sourcemaps
-   // Consume pulls the source map out of src and transforms the mappings to be correct
+  // Debug must be true for minifyify to work
+  .bundle({debug: true})
+
+  // This transform minifies code and tracks sourcemaps
+  // {global: true} lets you also minify shims
+  .pipe({global: true}, minifier.transform)
+
+   // Consume pulls the source map out of src and transforms the mappings
   .pipe(minifier.consume(function (err, src, map) {
     // src and map are strings
     // src has a comment pointing to map
