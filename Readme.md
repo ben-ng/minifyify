@@ -17,12 +17,13 @@ Now you can deploy a minified bundle in production, and still have a sourcemap h
 ```js
 var browserify = require('browserify')
   , minifyify = require('minifyify')
-  , bundle = new browserify();
+  , bundler = new browserify();
   , minifier = new minifyify();
 
-bundle.transform({global: true}, minifier.transform);
+bundler.add('entry.js');
+bundler.transform({global: true}, minifier.transform);
 
-bundle('entry.js')
+bundler
   .bundle({debug: true})
   .pipe(minifier.consumer(function (err, src, map) {
     // Your code here
@@ -35,7 +36,7 @@ bundle('entry.js')
 var path = require('path')
   , browserify = require('browserify')
   , minifyify = require('minifyify')
-  , bundle
+  , bundler
   , minifier
   , options = {
       compressPath: function (p) {
@@ -44,18 +45,20 @@ var path = require('path')
     , map: '/bundle.map.json'
     };
 
-bundle = new browserify();
+bundler = new browserify();
 minifier = new minifyify(options);
 
+bundler.add('entry.js')
+
 // Your other transforms
-bundle.transform(require('coffeeify'));
-bundle.transform(require('hbsfy'));
+bundler.transform(require('coffeeify'));
+bundler.transform(require('hbsfy'));
 
 // Minifies code while tracking sourcemaps
 // {global: true} lets us also minify browser shims
-bundle.transform({global: true}, minifier.transform);
+bundler.transform({global: true}, minifier.transform);
 
-bundle('entry.js')
+bundler
   // Debug must be true for minifyify to work
   .bundle({debug: true})
 
@@ -90,6 +93,10 @@ Example: If your bundle is at `mysite.com/bundle.js` and the map is at `mysite.c
 Set to `false` to disable source maps.
 
 ## FAQ
+
+ * Why is this not a *real* transform?
+
+   At this time of writing it is not possible to acheive what minifyify does with a pure transform. Minifyify needs to transform browserify's source map, which is only appended after all transforms have run and the bundling process is complete. That is the job of the `.consumer()` function.
 
  * Wait.. Why did the total size (souce code + map) get BIGGER??
 
