@@ -21,7 +21,7 @@ var browserify = require('browserify')
   , minifier = new minifyify();
 
 bundler.add('entry.js');
-bundler.transform({global: true}, minifier.transform);
+bundler.transform({global: true}, minifier.transformer);
 
 bundler
   .bundle({debug: true})
@@ -56,7 +56,7 @@ bundler.transform(require('hbsfy'));
 
 // Minifies code while tracking sourcemaps
 // {global: true} lets us also minify browser shims
-bundler.transform({global: true}, minifier.transform);
+bundler.transform({global: true}, minifier.transformer);
 
 bundler
   // Debug must be true for minifyify to work
