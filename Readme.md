@@ -12,13 +12,37 @@ Minifyify takes your browserify bundle and minfies it. The magic: your code stil
 
 Now you can deploy a minified bundle in production, and still have a sourcemap handy for when things inevitably break!
 
-## Usage
+## Simple Usage
 
 ```js
 var browserify = require('browserify')
   , minifyify = require('minifyify')
+  , bundle = new browserify();
+  , minifier = new minifyify();
+
+bundle.transform({global: true}, minifier.transform);
+
+bundle('entry.js')
+  .bundle({debug: true})
+  .pipe(minifier.consume(function (err, src, map) {
+    // Your code here
+  }));
+```
+
+## Full Usage
+
+```js
+var path = require('path')
+  , browserify = require('browserify')
+  , minifyify = require('minifyify')
   , bundle
-  , options // See docs below;
+  , minifier
+  , options = {
+      compressPath: function (p) {
+        return path.relative('my-app-root', p);
+      }
+    , map: '/bundle.map.json'
+    };
 
 bundle = new browserify();
 minifier = new minifyify(options);
