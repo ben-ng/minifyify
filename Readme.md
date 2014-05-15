@@ -24,7 +24,7 @@ bundle.transform({global: true}, minifier.transform);
 
 bundle('entry.js')
   .bundle({debug: true})
-  .pipe(minifier.consume(function (err, src, map) {
+  .pipe(minifier.consumer(function (err, src, map) {
     // Your code here
   }));
 ```
@@ -60,7 +60,7 @@ bundle('entry.js')
   .bundle({debug: true})
 
    // Consume pulls the source map out of src and transforms the mappings
-  .pipe(minifier.consume(function (err, src, map) {
+  .pipe(minifier.consumer(function (err, src, map) {
     // src and map are strings
     // src has a comment pointing to map
   }));
