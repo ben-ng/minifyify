@@ -90,7 +90,11 @@ This is added to the bottom of the minified source file, and should point to whe
 
 Example: If your bundle is at `mysite.com/bundle.js` and the map is at `mysite.com/map.js`, set `options.map = '/map.js'`
 
-Set to `false` to disable source maps.
+Set to `false` to minify, but not produce a source map or append the source map URL comment.
+
+### [options.minify]
+
+Set to false to disable minification and source map transforms. This essentially turns minifyify into a pass-thru stream.
 
 ## FAQ
 
