@@ -18,7 +18,7 @@
     "uglifyify",
     "compress"
   ],
-  "version": "3.0.0-beta5",
+  "version": "3.0.0-beta6",
   "repository": {
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
@@ -26,6 +26,7 @@
   "main": "./lib",
   "dependencies": {
     "through": "2.3.x",
+    "concat-stream": "1.4.x",
     "lodash.defaults": "2.4.x",
     "lodash.foreach": "2.4.x",
     "lodash.bind": "2.4.x",
