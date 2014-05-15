@@ -99,7 +99,7 @@ Set to `false` to disable source maps.
 
  * How does this work?
 
-   Minifyify runs UglifyJS on each file in your bundle, and uses browserify's sourcemap to translate
+   Minifyify runs UglifyJS on each file in your bundle, and transforms browserify's sourcemap to map to the original files.
 
  * Why does the sourcemap cause my debugger to behave erratically?
 
@@ -109,7 +109,7 @@ Set to `false` to disable source maps.
 
    ```
    var myThing = myFunc('a')
-    , cantGetHere = myFunc('b');
+     , cantGetHere = myFunc('b');
    ```
 
    If you set a breakpoint on the second line, your debugger might not pause execution there. I've found that setting the breakpoint on the first line and stepping onto the second line is more reliable.
