@@ -60,10 +60,6 @@ Set to false to disable minification and source map transforms. This essentially
 
 ## FAQ
 
- * Why is this not a *real* transform?
-
-   At this time of writing it is not possible to acheive what minifyify does with a pure transform. Minifyify needs to transform browserify's source map, which is only appended after all transforms have run and the bundling process is complete. That is the job of the `.consumer()` function.
-
  * Wait.. Why did the total size (souce code + map) get BIGGER??
 
    It's not immediately obvious, but the more you minify code, the bigger the sourcemap gets. Browserify can get away with merely mapping lines to lines because it is going from uncompressed code to uncompressed code. Minifyify squishes multiple lines together, so the sourcemap has to carry more information.
