@@ -4,45 +4,31 @@ Minifyify
 
 [![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify)
 
-*Now with browserify 3 support*
+*Now with Browserify 4 & CoffeeScript support*
 
 Before, browserify made you choose between sane debugging and sane load times. Now, you can have both.
 
-Minifyify takes your browserify bundle and minfies it. The magic: your code still maps back to the original, separate source files.
+Minifyify is a browserify plugin that minifies your code. The magic? The sourcemap points back to the original, separate source files.
 
 Now you can deploy a minified bundle in production, and still have a sourcemap handy for when things inevitably break!
 
 ## Usage
 
-Bundle your app with browserify's debug option, then pipe it to minifyify.
-
-```sh
-browserify -d entry.js | minifyify > bundle.min.js
-```
-
 ```js
 var browserify = require('browserify')
-  , minifyify = require('minifyify')
-  , bundle = new browserify()
-  , out = fs.createWriteStream('bundle.min.js')
-  , options // See docs;
+  , bundler = new browserify();
 
-bundle('entry.js')
-  .bundle({debug: true})
-  .pipe(minifyify(options))
-  .pipe(out); // output is a minified bundle with an inline source map
+bundler.add('entry.js');
+
+bundler.plugin('minifyify', options);
+
+bundler.bundle(function (err, src, map) {
+  // Your code here
+});
 ```
 
-You can also use callbacks to get your code and map in separate files
-
-```js
-bundle('entry.js')
-  .bundle({debug: true})
-  .pipe(minifyify(options, function (err, src, map) {
-    assert.ifError(err);
-    fs.writeFileSync('bundle.min.js', src);
-    fs.writeFileSync('bundle.min.map.json', map);
-  }))
+```sh
+browserify entry.js -p [minifyify --output bundle.map.json] > bundle.json
 ```
 
 ## Options
@@ -52,31 +38,41 @@ bundle('entry.js')
 Shorten the paths you see in the web inspector by defining a compression function.
 
 ```
-// A typical compressPaths function
-compressPaths: function (p) {
+// A typical compressPath function
+compressPath: function (p) {
   return path.relative('my-app-root', p);
 }
 ```
 
+Defaults to a no-op (absolute paths to all source files).
+
 ### [options.map]
 
-If you are using an external sourcemap, this is the path to it (string), which is added to the bottom of the minified file so browsers can correctly map. [More details here](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/#toc-howwork).
+This is added to the bottom of the minified source file, and should point to where the map will be accessible from on your server. [More details here](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/#toc-howwork).
 
-Set to `false` to disable source maps.
+Example: If your bundle is at `mysite.com/bundle.js` and the map is at `mysite.com/map.js`, set `options.map = '/map.js'`
 
-Defaults to a no-op (absolute paths to all source files).
+Set to `false` to minify, but not produce a source map or append the source map URL comment.
+
+### [options.minify]
+
+Set to false to disable minification and source map transforms. This essentially turns minifyify into a pass-thru stream.
 
 ## FAQ
 
- * Wait.. Why did my bundle get BIGGER??
+ * Why is this not a *real* transform?
+
+   At this time of writing it is not possible to acheive what minifyify does with a pure transform. Minifyify needs to transform browserify's source map, which is only appended after all transforms have run and the bundling process is complete. That is the job of the `.consumer()` function.
+
+ * Wait.. Why did the total size (souce code + map) get BIGGER??
 
    It's not immediately obvious, but the more you minify code, the bigger the sourcemap gets. Browserify can get away with merely mapping lines to lines because it is going from uncompressed code to uncompressed code. Minifyify squishes multiple lines together, so the sourcemap has to carry more information.
 
-   **Pull the sourcemap out into a separate file and link to it from the minified source!**
+   This is OK because the sourcemap is in a separate file, which means your app will be snappy for your users as their browsers won't download the sourcemap.
 
  * How does this work?
 
-   Minifyify runs UglifyJS on your bundle, and uses Browserify's inline sourcemap to create a new sourcemap that maps the minified code to the unbundled files.
+   Minifyify runs UglifyJS on each file in your bundle, and transforms browserify's sourcemap to map to the original files.
 
  * Why does the sourcemap cause my debugger to behave erratically?
 
@@ -86,7 +82,7 @@ Defaults to a no-op (absolute paths to all source files).
 
    ```
    var myThing = myFunc('a')
-    , cantGetHere = myFunc('b');
+     , cantGetHere = myFunc('b');
    ```
 
    If you set a breakpoint on the second line, your debugger might not pause execution there. I've found that setting the breakpoint on the first line and stepping onto the second line is more reliable.
@@ -95,7 +91,7 @@ Defaults to a no-op (absolute paths to all source files).
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Ben Ng
+Copyright (c) 2013-2014 Ben Ng
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

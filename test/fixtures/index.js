@@ -3,15 +3,22 @@ var path = require('path')
   , BUILD_DIR = path.join(__dirname, '..', 'build')
   , SCAFFOLD_DIR = path.join(__dirname, '..', 'build', 'scaffold')
   , entryScript = function (name) {
-      return path.join(FIXTURES_DIR, name, 'entry.js');
+      var ext;
+
+      if(name.indexOf('coffee') >= 0)
+        ext = 'coffee';
+      else
+        ext = 'js';
+
+      return path.join(FIXTURES_DIR, name, 'entry.' + ext);
     }
   , bundledDir = function (name) {
       return path.join(BUILD_DIR, 'apps', name);
     }
-  , bundledFile = function (name, uuid) {
+  , bundledFile = function (name) {
       return path.join(BUILD_DIR, name, 'bundle.min.js');
     }
-  , bundledMap = function (name, uuid) {
+  , bundledMap = function (name) {
       return path.join(BUILD_DIR, name, 'bundle.map.json');
     }
   , simplifyPath = function (filePath) {

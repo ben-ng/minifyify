@@ -1,6 +1,6 @@
 var Backbone = require('backbone')
   , $ = require('jquery-browserify')
-  , _ = require('lodash')
+  , _ = {template: require('lodash.template')}
   , View;
 
 Backbone.$ = $;
