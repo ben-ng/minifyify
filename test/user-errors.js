@@ -7,7 +7,7 @@
 var domain = require('domain')
   , assert = require('assert')
   , browserify = require('browserify')
-  , minifyify = require('../lib')
+  , minifyify = require('../lib/minifier')
   , fixtures = require('./fixtures')
   , tests = {};
 

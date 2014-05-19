@@ -5,7 +5,7 @@ var fixtures = require('./fixtures')
   , assert = require('assert')
   , browserify = require('browserify')
   , validate = require('sourcemap-validator')
-  , Minifyify = require('../lib')
+  , Minifyify = require('../lib/minifier')
 
   // Helpers
   , compileApp

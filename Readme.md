@@ -8,65 +8,27 @@ Minifyify
 
 Before, browserify made you choose between sane debugging and sane load times. Now, you can have both.
 
-Minifyify takes your browserify bundle and minfies it. The magic: your code still maps back to the original, separate source files.
+Minifyify is a browserify plugin that minifies your code. The magic? The sourcemap points back to the original, separate source files.
 
 Now you can deploy a minified bundle in production, and still have a sourcemap handy for when things inevitably break!
 
-## Simple Usage
+## Usage
 
 ```js
 var browserify = require('browserify')
-  , minifyify = require('minifyify')
   , bundler = new browserify();
-  , minifier = new minifyify();
 
 bundler.add('entry.js');
-bundler.transform({global: true}, minifier.transformer);
 
-bundler
-  .bundle({debug: true})
-  .pipe(minifier.consumer(function (err, src, map) {
-    // Your code here
-  }));
+bundler.plugin('minifyify', options);
+
+bundler.bundle(function (err, src, map) {
+  // Your code here
+});
 ```
 
-## Full Usage
-
-```js
-var path = require('path')
-  , browserify = require('browserify')
-  , minifyify = require('minifyify')
-  , bundler
-  , minifier
-  , options = {
-      compressPath: function (p) {
-        return path.relative('my-app-root', p);
-      }
-    , map: '/bundle.map.json'
-    };
-
-bundler = new browserify();
-minifier = new minifyify(options);
-
-bundler.add('entry.js')
-
-// Your other transforms
-bundler.transform(require('coffeeify'));
-bundler.transform(require('hbsfy'));
-
-// Minifies code while tracking sourcemaps
-// {global: true} lets us also minify browser shims
-bundler.transform({global: true}, minifier.transformer);
-
-bundler
-  // Debug must be true for minifyify to work
-  .bundle({debug: true})
-
-   // Consume pulls the source map out of src and transforms the mappings
-  .pipe(minifier.consumer(function (err, src, map) {
-    // src and map are strings
-    // src has a comment pointing to map
-  }));
+```sh
+browserify entry.js -p [minifyify --output bundle.map.json] > bundle.json
 ```
 
 ## Options
