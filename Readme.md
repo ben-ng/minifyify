@@ -14,22 +14,28 @@ Now you can deploy a minified bundle in production, and still have a sourcemap h
 
 ## Usage
 
+### Programmatic API
 ```js
 var browserify = require('browserify')
   , bundler = new browserify();
 
 bundler.add('entry.js');
 
-bundler.plugin('minifyify', options);
+bundler.plugin('minifyify', {map: 'bundle.map.json'});
 
 bundler.bundle(function (err, src, map) {
   // Your code here
 });
 ```
 
+The map option should be the location of the sourcemap on your server, and is used to insert the `sourceMappingURL` comment in `src`.
+
+### Command Line
 ```sh
-browserify entry.js -p [minifyify --output bundle.map.json] > bundle.json
+$ browserify entry.js -p [minifyify --map bundle.map.json --output bundle.map.json] > bundle.js
 ```
+
+The `--output` option is a required option unique to the command line interface and specifies where minifyify should write the sourcemap to on disk.
 
 ## Options
 

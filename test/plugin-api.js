@@ -11,12 +11,13 @@ var assert = require('assert')
 
 tests['browserify -p minifyify > out.js'] = function (next) {
   var appname = 'simple file'
+    , mapFile = 'bundle.clied.map.json'
     , browserify = path.join(path.dirname(require.resolve('browserify')), 'bin', 'cmd.js')
     , minifyify = path.join(__dirname, '..', 'lib', 'index.js')
     , outFile = path.join(fixtures.buildDir, 'apps', appname, 'bundle.clied.js')
-    , outMapFile = path.join(fixtures.buildDir, 'apps', appname, 'bundle.clied.map.json')
+    , outMapFile = path.join(fixtures.buildDir, 'apps', appname, mapFile)
     , cmd = browserify + ' "' + jsesc(fixtures.entryScript(appname), {quotes: 'double'}) +
-      '" -p [ "' + jsesc(minifyify, {quotes: 'double'}) + '" --output "' + jsesc(outMapFile, {quotes: 'double'}) + '" ] > "' +
+      '" -p [ "' + jsesc(minifyify, {quotes: 'double'}) + '" --map ' + mapFile + ' --output "' + jsesc(outMapFile, {quotes: 'double'}) + '" ] > "' +
       jsesc(outFile, {quotes: 'double'}) + '"'
     , ex = jake.createExec(cmd)
     , dat = [];
@@ -38,7 +39,9 @@ tests['browserify -p minifyify > out.js'] = function (next) {
 
   ex.addListener('cmdEnd', function () {
     assert.doesNotThrow(function () {
-      validate(fs.readFileSync(outFile).toString(), fs.readFileSync(outMapFile).toString())
+      var src = fs.readFileSync(outFile).toString();
+      validate(src, fs.readFileSync(outMapFile).toString());
+      assert.ok(src.indexOf(mapFile) >= 0, 'The map argument should have been used');
     }, 'The bundle should have a valid external sourcemap');
     next();
   });
