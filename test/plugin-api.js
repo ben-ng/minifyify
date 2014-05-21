@@ -1,6 +1,7 @@
 /* globals jake */
 
 var assert = require('assert')
+  , utils = require('utilities')
   , fs = require('fs')
   , path = require('path')
   , jsesc = require('jsesc')
@@ -10,6 +11,7 @@ var assert = require('assert')
   , tests = {};
 
 tests['browserify -p minifyify > out.js'] = function (next) {
+
   var appname = 'simple file'
     , mapFile = 'bundle.clied.map.json'
     , browserify = path.join(path.dirname(require.resolve('browserify')), 'bin', 'cmd.js')
@@ -21,6 +23,9 @@ tests['browserify -p minifyify > out.js'] = function (next) {
       jsesc(outFile, {quotes: 'double'}) + '"'
     , ex = jake.createExec(cmd)
     , dat = [];
+
+  utils.file.rmRf( path.dirname(outFile) , {silent: true});
+  utils.file.mkdirP( path.dirname(outFile) , {silent: true});
 
   ex.addListener('stdout', function (data) {
     dat.push(data);
