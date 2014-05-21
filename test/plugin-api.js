@@ -18,8 +18,16 @@ tests['browserify -p minifyify > out.js'] = function (next) {
     , minifyify = path.join(__dirname, '..', 'lib', 'index.js')
     , outFile = path.join(fixtures.buildDir, 'apps', appname, 'bundle.clied.js')
     , outMapFile = path.join(fixtures.buildDir, 'apps', appname, mapFile)
+    , compressPath = jsesc(path.dirname(fixtures.entryScript(appname)), {quotes: 'double'})
     , cmd = browserify + ' "' + jsesc(fixtures.entryScript(appname), {quotes: 'double'}) +
-      '" -p [ "' + jsesc(minifyify, {quotes: 'double'}) + '" --map ' + mapFile + ' --output "' + jsesc(outMapFile, {quotes: 'double'}) + '" ] > "' +
+      // Make sure that the plugin can be used, and we can define the map location
+      '" -p [ "' + jsesc(minifyify, {quotes: 'double'}) + '" --map ' + mapFile +
+
+      // Make sure that we can accept a string compressPath options
+      ' --compressPath "' + compressPath + '"' +
+
+      // Ensure that the output option is respected
+      ' --output "' + jsesc(outMapFile, {quotes: 'double'}) + '" ] > "' +
       jsesc(outFile, {quotes: 'double'}) + '"'
     , ex = jake.createExec(cmd)
     , dat = [];
@@ -44,9 +52,18 @@ tests['browserify -p minifyify > out.js'] = function (next) {
 
   ex.addListener('cmdEnd', function () {
     assert.doesNotThrow(function () {
-      var src = fs.readFileSync(outFile).toString();
-      validate(src, fs.readFileSync(outMapFile).toString());
+      var src = fs.readFileSync(outFile).toString()
+        , map = fs.readFileSync(outMapFile).toString();
+
+      // Ensures that the map is a valid one
+      validate(src, map);
+
+      // This ensures that the mapFile argument appears in the src as the comment
       assert.ok(src.indexOf(mapFile) >= 0, 'The map argument should have been used');
+
+      // If paths were compressed, then this path should never appear in the map
+      assert.ok(map.indexOf(compressPath) < 0, 'The compressPath option should have been used')
+
     }, 'The bundle should have a valid external sourcemap');
     next();
   });

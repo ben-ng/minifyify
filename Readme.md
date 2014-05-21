@@ -50,6 +50,8 @@ compressPath: function (p) {
 }
 ```
 
+If a string is provided, it will be used instead of `my-app-root` in the function above. This is useful if you are working from the command line and cannot define a function.
+
 Defaults to a no-op (absolute paths to all source files).
 
 ### [options.map]
