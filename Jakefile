@@ -10,12 +10,11 @@ npmPublishTask('minifyify', function () {
   this.packageFiles.include([
     'Jakefile'
   , 'lib/**'
-  , 'test/**'
   , 'bin/*'
   , 'package.json'
   , 'Readme.md'
   ]);
   this.packageFiles.exclude([
-    'test/build/apps'
+    'test'
   ]);
 });
