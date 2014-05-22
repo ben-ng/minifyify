@@ -35,7 +35,7 @@ The map option should be the location of the sourcemap on your server, and is us
 $ browserify entry.js -p [minifyify --map bundle.map.json --output bundle.map.json] > bundle.js
 ```
 
-The `--output` option is a required option unique to the command line interface and specifies where minifyify should write the sourcemap to on disk.
+The `--output` option is a required option on the command line interface and specifies where minifyify should write the sourcemap to on disk.
 
 ## Options
 
@@ -65,6 +65,10 @@ Set to `false` to minify, but not produce a source map or append the source map 
 ### [options.minify]
 
 Set to false to disable minification and source map transforms. This essentially turns minifyify into a pass-thru stream.
+
+### [options.output]
+
+Specify a path to write the sourcemap to. Required when using the CLI, optional when working programmatically.
 
 ## FAQ
 
