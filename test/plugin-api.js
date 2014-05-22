@@ -62,7 +62,7 @@ tests['browserify -p minifyify > out.js'] = function (next) {
       assert.ok(src.indexOf(mapFile) >= 0, 'The map argument should have been used');
 
       // If paths were compressed, then this path should never appear in the map
-      assert.ok(map.indexOf(compressPath) < 0, 'The compressPath option should have been used')
+      assert.ok(map.indexOf(compressPath) < 0, 'The compressPath option should have been used');
 
     }, 'The bundle should have a valid external sourcemap');
     next();
@@ -79,6 +79,28 @@ tests['programmatic plugin api'] = function (next) {
     if(err) { throw err; }
     assert.doesNotThrow(function () {
       validate(src, map)
+    }, 'The bundle should have a valid sourcemap');
+    next();
+  });
+}
+
+tests['programmatic plugin api with --output'] = function (next) {
+  var bundler = new browserify()
+    , appname = 'simple file'
+    , mapFile = 'bundle.programmatic.map.json'
+    , outMapFile = path.join(fixtures.buildDir, 'apps', appname, mapFile);
+
+  bundler.add(fixtures.entryScript('simple file'));
+  bundler.plugin(require('../lib'), {output: outMapFile});
+  bundler.bundle(function (err, src, map) {
+    if(err) { throw err; }
+    assert.doesNotThrow(function () {
+      // The regular map should be ok
+      validate(src, map);
+
+      // The output option should have been respected
+      validate(src, fs.readFileSync(outMapFile).toString());
+
     }, 'The bundle should have a valid sourcemap');
     next();
   });
