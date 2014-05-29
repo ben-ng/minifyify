@@ -41,6 +41,7 @@ compileApp = function (appname, map, next) {
   bundle = bundle
             .transform(require('coffeeify'))
             .transform(require('hbsfy'))
+            .transform(require('brfs'))
             .transform(minifier.transformer)
             .bundle({debug: map !== false})
 
@@ -93,6 +94,10 @@ tests['complex file'] = function (next) {
 
 tests['native libs'] = function (next) {
   testApp('native libs', next);
+};
+
+tests['brfs app'] = function (next) {
+  testApp('brfs app', next);
 };
 
 tests['coffee app'] = function (next) {

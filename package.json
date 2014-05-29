@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "coffeeify": "latest",
+    "brfs": "latest",
     "lodash.template": "latest",
     "jsesc": "latest",
     "utilities": "latest",
