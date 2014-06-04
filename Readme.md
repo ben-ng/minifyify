@@ -66,6 +66,8 @@ Set to `false` to minify, but not produce a source map or append the source map 
 
 Set to false to disable minification and source map transforms. This essentially turns minifyify into a pass-thru stream.
 
+If you set it to an object, it will be passed as the options argument to `uglify.minify`.
+
 ### [options.output]
 
 Specify a path to write the sourcemap to. Required when using the CLI, optional when working programmatically.
