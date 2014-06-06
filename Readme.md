@@ -74,6 +74,10 @@ Specify a path to write the sourcemap to. Required when using the CLI, optional 
 
 ## FAQ
 
+ * PARSE ERROR!
+
+   Are you using `brfs`? Pin it to version `1.0.2`. See issue #44 for details.
+
  * Wait.. Why did the total size (souce code + map) get BIGGER??
 
    It's not immediately obvious, but the more you minify code, the bigger the sourcemap gets. Browserify can get away with merely mapping lines to lines because it is going from uncompressed code to uncompressed code. Minifyify squishes multiple lines together, so the sourcemap has to carry more information.
