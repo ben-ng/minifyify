@@ -106,4 +106,40 @@ tests['programmatic plugin api with --output'] = function (next) {
   });
 }
 
+tests['programmatic plugin api with minify=false and output'] = function (next) {
+  var bundler = new browserify()
+    , appname = 'simple file'
+    , mapFile = 'bundle.programmatic.map.json'
+    , outMapFile = path.join(fixtures.buildDir, 'apps', appname, mapFile);
+
+  bundler.add(fixtures.entryScript('simple file'));
+  bundler.plugin(require('../lib'), {minify:false, output: outMapFile});
+  bundler.bundle(function (err, src, map) {
+    if(err) { throw err; }
+    assert.ok(src)
+    assert.equal(map, null, 'There should be no map')
+    next();
+  });
+}
+
+tests['programmatic plugin api with minify=false and compressPath'] = function (next) {
+  var bundler = new browserify()
+    , appname = 'simple file'
+    , mapFile = 'bundle.programmatic.map.json'
+    , outMapFile = path.join(fixtures.buildDir, 'apps', appname, mapFile);
+
+  bundler.add(fixtures.entryScript('simple file'));
+  bundler.plugin(require('../lib'), {
+    minify: false
+  , compressPath: function (p) { return p }
+  , output: outMapFile
+  });
+  bundler.bundle(function (err, src, map) {
+    if(err) { throw err; }
+    assert.ok(src)
+    assert.equal(map, null, 'There should be no map')
+    next();
+  });
+}
+
 module.exports = tests;
