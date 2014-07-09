@@ -30,7 +30,7 @@
     "lodash.defaults": "2.4.x",
     "lodash.foreach": "2.4.x",
     "lodash.bind": "2.4.x",
-    "source-map": "0.1.x",
+    "source-map": "0.1.34",
     "uglify-js": "2.4.x",
     "convert-source-map": "^0.3.3",
     "tmp": "0.0.23"
