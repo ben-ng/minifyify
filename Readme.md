@@ -10,7 +10,40 @@ Before, browserify made you choose between sane debugging and sane load times. N
 
 Minifyify is a browserify plugin that minifies your code. The magic? The sourcemap points back to the original, separate source files.
 
-Now you can deploy a minified bundle in production, and still have a sourcemap handy for when things inevitably break!
+Now you can deploy a minified bundle in production, and still have meaningful stack traces when things inevitably break!
+
+# Advantages
+
+There are advantages to using minifyify over your current minification solution:
+
+
+ * Reliability
+
+If you are currently using uglifyify and realized that your sourcemap is behaving strangely, you're not alone. Minifyify builds its own sourcemap instead of depending on uglify-js's `insourcemap` option, and has proven to be more reliable in practice.
+
+ * Smaller Bundles
+
+If you are currently running uglify-js on the bundle browserify outputs, minifyify can give you a smaller bundle because it removes dead code before browserify processes requires in it.
+
+For example:
+```javascript
+if(process.env.browser) {
+  var realtime = require('socket-io.client')
+}
+else {
+  var realtime = require('socket-io')
+}
+```
+
+Only one of the required modules will be in your output bundle, because minifyify runs uglify on each individual file before browserify does its bundling.
+
+ * A Neater Web Inspector
+
+Minifyify allows you to transform those obnoxious absolute paths in your web inspector with `compressPath`.
+
+ * CoffeeScript Support
+
+Minifyify is tested against CoffeeScript, and can map minified code all the way back to the original `.coffee` files.
 
 ## Usage
 
