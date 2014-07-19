@@ -12,7 +12,7 @@ Minifyify is a browserify plugin that minifies your code. The magic? The sourcem
 
 Now you can deploy a minified bundle in production, and still have meaningful stack traces when things inevitably break!
 
-# Advantages
+## Advantages
 
 There are advantages to using minifyify over your current minification solution:
 
