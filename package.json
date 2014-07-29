@@ -52,6 +52,7 @@
     "backbone": "latest",
     "hbsfy": "latest",
     "envify": "latest",
+    "handlebars": "latest",
     "handlebars-runtime": "latest"
   },
   "optionalDependencies": {},
