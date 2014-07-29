@@ -39,7 +39,7 @@ tests['browserify is not in debug mode'] = function (next) {
     bundle = bundle
               .transform(require('hbsfy'))
               .transform({global: true}, minifier.transformer)
-              .bundle({debug: false})
+              .bundle()
 
     bundle.pipe(minifier.consumer(noop));
   });

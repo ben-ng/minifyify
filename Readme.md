@@ -4,7 +4,7 @@ Minifyify
 
 [![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify)
 
-*Now with Browserify 4 & CoffeeScript support*
+*Now with Browserify 5 & CoffeeScript support*
 
 Before, browserify made you choose between sane debugging and sane load times. Now, you can have both.
 
@@ -50,7 +50,8 @@ Minifyify is tested against CoffeeScript, and can map minified code all the way 
 ### Programmatic API
 ```js
 var browserify = require('browserify')
-  , bundler = new browserify();
+    // As of browserify 5, you must enable debug mode in the constructor to use minifyify
+  , bundler = new browserify({debug: true});
 
 bundler.add('entry.js');
 
@@ -65,7 +66,7 @@ The map option should be the location of the sourcemap on your server, and is us
 
 ### Command Line
 ```sh
-$ browserify entry.js -p [minifyify --map bundle.map.json --output bundle.map.json] > bundle.js
+$ browserify entry.js -d -p [minifyify --map bundle.map.json --output bundle.map.json] > bundle.js
 ```
 
 The `--output` option is a required option on the command line interface and specifies where minifyify should write the sourcemap to on disk.

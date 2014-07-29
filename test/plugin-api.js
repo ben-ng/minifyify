@@ -10,7 +10,7 @@ var assert = require('assert')
   , fixtures = require('./fixtures')
   , tests = {};
 
-tests['browserify -p minifyify > out.js'] = function (next) {
+tests['browserify -d -p minifyify --map mapFile > out.js'] = function (next) {
 
   var appname = 'simple file'
     , mapFile = 'bundle.clied.map.json'
@@ -21,7 +21,7 @@ tests['browserify -p minifyify > out.js'] = function (next) {
     , compressPath = jsesc(path.dirname(fixtures.entryScript(appname)), {quotes: 'double'})
     , cmd = browserify + ' "' + jsesc(fixtures.entryScript(appname), {quotes: 'double'}) +
       // Make sure that the plugin can be used, and we can define the map location
-      '" -p [ "' + jsesc(minifyify, {quotes: 'double'}) + '" --map ' + mapFile +
+      '" -d -p [ "' + jsesc(minifyify, {quotes: 'double'}) + '" --map ' + mapFile +
 
       // Make sure that we can accept a string compressPath options
       ' --compressPath "' + compressPath + '"' +
@@ -72,7 +72,7 @@ tests['browserify -p minifyify > out.js'] = function (next) {
 };
 
 tests['programmatic plugin api'] = function (next) {
-  var bundler = new browserify();
+  var bundler = new browserify({debug: true});
   bundler.add(fixtures.entryScript('simple file'));
   bundler.plugin(require('../lib'));
   bundler.bundle(function (err, src, map) {
@@ -85,7 +85,7 @@ tests['programmatic plugin api'] = function (next) {
 }
 
 tests['programmatic plugin api with --output'] = function (next) {
-  var bundler = new browserify()
+  var bundler = new browserify({debug: true})
     , appname = 'simple file'
     , mapFile = 'bundle.programmatic.map.json'
     , outMapFile = path.join(fixtures.buildDir, 'apps', appname, mapFile);
@@ -107,7 +107,7 @@ tests['programmatic plugin api with --output'] = function (next) {
 }
 
 tests['programmatic plugin api with minify=false and output'] = function (next) {
-  var bundler = new browserify()
+  var bundler = new browserify({debug: true})
     , appname = 'simple file'
     , mapFile = 'bundle.programmatic.map.json'
     , outMapFile = path.join(fixtures.buildDir, 'apps', appname, mapFile);
@@ -123,7 +123,7 @@ tests['programmatic plugin api with minify=false and output'] = function (next) 
 }
 
 tests['programmatic plugin api with minify=false and compressPath'] = function (next) {
-  var bundler = new browserify()
+  var bundler = new browserify({debug: true})
     , appname = 'simple file'
     , mapFile = 'bundle.programmatic.map.json'
     , outMapFile = path.join(fixtures.buildDir, 'apps', appname, mapFile);
@@ -143,7 +143,7 @@ tests['programmatic plugin api with minify=false and compressPath'] = function (
 }
 
 tests['programmatic plugin api with minify=false and map'] = function (next) {
-  var bundler = new browserify()
+  var bundler = new browserify({debug: true})
     , appname = 'simple file'
     , mapFile = 'bundle.programmatic.map.json'
     , outMapFile = path.join(fixtures.buildDir, 'apps', appname, mapFile);

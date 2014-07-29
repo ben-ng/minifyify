@@ -27,7 +27,7 @@ compileApp = function (appname, map, next) {
     map = 'bundle.map.json';
   }
 
-  var bundle = new browserify()
+  var bundle = new browserify({debug: map !== false})
     , opts = {
         compressPath: function (p) {
           return path.relative(path.join(__dirname, 'fixtures', appname), p);
@@ -43,7 +43,7 @@ compileApp = function (appname, map, next) {
             .transform(require('hbsfy'))
             .transform(require('brfs'))
             .transform(minifier.transformer)
-            .bundle({debug: map !== false})
+            .bundle()
 
   bundle.pipe(minifier.consumer(function (err, src, map) {
     if(err) {
