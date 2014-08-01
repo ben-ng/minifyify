@@ -26,7 +26,7 @@
   "main": "./lib",
   "dependencies": {
     "concat-stream": "1.4.x",
-    "convert-source-map": "^0.3.3",
+    "convert-source-map": "^0.4.0",
     "lodash.bind": "2.4.x",
     "lodash.defaults": "2.4.x",
     "lodash.foreach": "2.4.x",
