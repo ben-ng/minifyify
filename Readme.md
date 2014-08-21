@@ -106,6 +106,10 @@ If you set it to an object, it will be passed as the options argument to `uglify
 
 Specify a path to write the sourcemap to. Required when using the CLI, optional when working programmatically.
 
+### [options.uglify]
+
+Will be passed to `uglify.minify`
+
 ## FAQ
 
  * PARSE ERROR!
