@@ -116,10 +116,26 @@ tests['transformed app'] = function (next) {
   testApp('transformed app', next);
 };
 
-tests['opts.map = false should not produce a sourcemap'] = function (next) {
+tests['argument map = false should not produce a sourcemap'] = function (next) {
   compileApp('simple file', false, function (min, map) {
     assert.ok(min);
     assert.ok(map == null);
+    next();
+  });
+};
+
+tests['opts.map = false should not produce a sourcemap'] = function (next) {
+  compileApp('simple file', { map : false }, function (min, map) {
+    assert.ok(min);
+    assert.ok(map == null);
+    next();
+  });
+};
+
+tests['opts.map = true should produce a sourcemap'] = function (next) {
+  compileApp('simple file', { map : true }, function (min, map) {
+    assert.ok(min);
+    assert.ok(map);
     next();
   });
 };
