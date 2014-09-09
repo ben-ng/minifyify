@@ -21,19 +21,23 @@ var fixtures = require('./fixtures')
     };
 
 compileApp = function (appname, map, next) {
+  var opts = {
+    compressPath: function (p) {
+      return path.relative(path.join(__dirname, 'fixtures', appname), p);
+    }
+  };
 
   if(typeof map == 'function') {
     next = map;
     map = 'bundle.map.json';
+    opts.map = map;
+  }
+
+  if (typeof map == 'object') {
+    opts = utils.object.merge(opts, map)
   }
 
   var bundle = new browserify({debug: map !== false})
-    , opts = {
-        compressPath: function (p) {
-          return path.relative(path.join(__dirname, 'fixtures', appname), p);
-        }
-      , map: map
-      }
     , minifier = new Minifyify(opts);
 
   bundle.add(fixtures.entryScript(appname));
@@ -112,10 +116,36 @@ tests['transformed app'] = function (next) {
   testApp('transformed app', next);
 };
 
-tests['opts.map = false should not produce a sourcemap'] = function (next) {
+tests['argument map = false should not produce a sourcemap'] = function (next) {
   compileApp('simple file', false, function (min, map) {
     assert.ok(min);
     assert.ok(map == null);
+    next();
+  });
+};
+
+tests['opts.map = false should not produce a sourcemap'] = function (next) {
+  compileApp('simple file', { map : false }, function (min, map) {
+    assert.ok(min);
+    assert.ok(map == null);
+    next();
+  });
+};
+
+tests['opts.map = true should produce a sourcemap'] = function (next) {
+  compileApp('simple file', { map : true }, function (min, map) {
+    assert.ok(min);
+    assert.ok(map);
+    next();
+  });
+};
+
+tests['opts.sourcesContent = false should produce a map without sourcesContent'] = function (next) {
+  compileApp('simple file', { sourcesContent : false }, function (min, map) {
+    map = JSON.parse(map, null, 4);
+    assert.ok(min);
+    assert.ok(map);
+    assert.ok(map.sourcesContent == null);
     next();
   });
 };
