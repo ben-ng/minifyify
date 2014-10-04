@@ -143,6 +143,10 @@ Will be passed to `uglify.minify`
 
    If you set a breakpoint on the second line, your debugger might not pause execution there. I've found that setting the breakpoint on the first line and stepping onto the second line is more reliable.
 
+## Other Modules
+
+minifyify not working for you? try [gulp-sourcemaps](https://github.com/floridoo/gulp-sourcemaps).
+
 ## License
 
 The MIT License (MIT)
