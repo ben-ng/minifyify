@@ -16,9 +16,8 @@ tests['browserify is not in debug mode'] = function (next) {
 
   d.on('error', function (e) {
     assert.equal(e.toString()
-      , 'Browserify must be in debug mode for minifyify to consume sourcemaps'
-      , 'Should be a helpful error message');
-
+      , 'Error: Browserify must be in debug mode for minifyify to consume sourcemaps'
+      , 'Should be a helpful error message, got:\n' + e.toString());
     next();
   });
 

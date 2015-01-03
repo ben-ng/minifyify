@@ -104,9 +104,15 @@ tests['brfs app'] = function (next) {
   testApp('brfs app', next);
 };
 
+/* Broken because of coffeescript 1.8.0..
+ * See: https://github.com/jashkenas/coffeescript/issues/3681
+ * See: https://github.com/jashkenas/coffeescript/issues/3672
+
 tests['coffee app'] = function (next) {
   testApp('coffee app', next);
 };
+
+*/
 
 tests['backbone app'] = function (next) {
   testApp('backbone app', next);

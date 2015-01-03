@@ -4,7 +4,7 @@ Minifyify
 
 [![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify)
 
-*Now with Browserify 5 & CoffeeScript support*
+*Supports up to Browserify 8*
 
 Before, browserify made you choose between sane debugging and sane load times. Now, you can have both.
 
@@ -43,7 +43,9 @@ Minifyify allows you to transform those obnoxious absolute paths in your web ins
 
  * CoffeeScript Support
 
-Minifyify is tested against CoffeeScript, and can map minified code all the way back to the original `.coffee` files.
+~~Minifyify is tested against CoffeeScript, and can map minified code all the way back to the original `.coffee` files.~~
+
+CoffeeScript support is janky because of [this issue](https://github.com/jashkenas/coffeescript/issues/3672). The sourcemap that `coffee-script` produces is wrong, so I had to skip over minifyify's CoffeeScript test. minifyify won't crash, but the test suite validates sourcemaps for correctness. Use at your own risk!
 
 ## Usage
 
