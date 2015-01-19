@@ -180,7 +180,7 @@ tests['programmatic plugin api with minify=false and map'] = function (next) {
     if(err) { throw err; }
     assert.ok(src)
     assert.equal(map, null, 'There should be no map')
-    assert.ok(src.indexOf('sourceMappingURL') > -1, 'But there should be an inline sourcemap')
+    assert.ok(src.toString().indexOf('sourceMappingURL') > -1, 'But there should be an inline sourcemap')
     next();
   });
 }
