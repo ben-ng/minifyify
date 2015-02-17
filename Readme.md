@@ -2,7 +2,7 @@ Minifyify
 =========
 #### Tiny, Debuggable Browserify Bundles
 
-[![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify)
+[![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify) [![Dependency Status](https://david-dm.org/ben-ng/minifyify.svg)](https://david-dm.org/ben-ng/minifyify)
 
 *Supports up to Browserify 8*
 
