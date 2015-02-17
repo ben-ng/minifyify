@@ -37,7 +37,7 @@ compileApp = function (appname, map, next) {
     opts = utils.object.merge(opts, map)
   }
 
-  var bundle = new browserify({debug: map !== false})
+  var bundle = new browserify({debug: true})
     , minifier = new Minifyify(opts);
 
   bundle.add(fixtures.entryScript(appname));
@@ -120,14 +120,6 @@ tests['backbone app'] = function (next) {
 
 tests['transformed app'] = function (next) {
   testApp('transformed app', next);
-};
-
-tests['argument map = false should not produce a sourcemap'] = function (next) {
-  compileApp('simple file', false, function (min, map) {
-    assert.ok(min);
-    assert.ok(map == null);
-    next();
-  });
 };
 
 tests['opts.map = false should not produce a sourcemap'] = function (next) {
