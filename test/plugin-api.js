@@ -185,4 +185,25 @@ tests['programmatic plugin api with minify=false and map'] = function (next) {
   });
 }
 
+// this is for Watchify
+tests['multiple bundles with the same transform'] = function (next) {
+  var bundler = new browserify({debug: true});
+  bundler.add(fixtures.entryScript('simple file'));
+  bundler.plugin(require('../lib'));
+  bundler.bundle(function (err, src, map) {
+    if(err) { throw err; }
+    assert.doesNotThrow(function () {
+      validate(src, map)
+    }, 'The bundle should have a valid sourcemap');
+
+    bundler.bundle(function (err, src, map) {
+      if(err) { throw err; }
+      assert.doesNotThrow(function () {
+        validate(src, map)
+      }, 'The bundle should have a valid sourcemap');
+      next();
+    });
+  });
+}
+
 module.exports = tests;
