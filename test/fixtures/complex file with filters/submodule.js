@@ -1,3 +1,5 @@
+// submodule.js NOT_MINIFIED
+
 var subsubmodule = require('./subsubmodule');
 
 module.exports = {

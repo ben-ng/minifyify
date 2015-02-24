@@ -1,3 +1,5 @@
+// entry.js NOT_MINIFIED
+
 var submodule = require('./submodule')
   , jsonthing = require('./jsonthing.json')
   , myString

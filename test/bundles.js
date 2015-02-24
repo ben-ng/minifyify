@@ -90,6 +90,45 @@ testApp = function(appname, cb, opts) {
   opts ? compileApp(appname, opts, validateApp) : compileApp(appname, validateApp);
 };
 
+/*
+ * 1. Builds the app and validates the source map.
+ * 2. Greps the bundle for a NOT_MINIFIED comment, or an special unminified json line.
+ * 3. Builds an array of files that were not minified.
+ * 3. compares `expected_unminified` to the array of unminified files found
+ */
+function testFilter(appname, opts, expected_unminified, cb){
+
+  expected_unminified = expected_unminified.slice().sort();
+
+  var actual_unminified = [];
+
+  // scans the created bundle for unminified contents
+  function scanUnmodified(pattern){
+    var contents = fs.readFileSync(fixtures.bundledFile(appname));
+    var match;
+    var regex = new RegExp(pattern, 'g');
+    while (match = regex.exec(contents)) {
+      actual_unminified.push(match[1]);   // The first capture group should contain the file name
+    }
+  }
+
+  function assertUnminified(){
+    // find unminified javascript files
+    scanUnmodified("\\/\\/ ([a-zA-Z\\.]+) NOT_MINIFIED");
+
+    // find unminified json files
+    scanUnmodified('"unminified":\\s+"([a-zA-Z\\.]+)"');
+
+    actual_unminified.sort();
+
+    assert.deepEqual(actual_unminified,expected_unminified);
+
+    cb();
+  }
+
+  testApp(appname, assertUnminified, opts);
+}
+
 tests['simple file'] = function (next) {
   testApp('simple file', next);
 };
@@ -99,15 +138,30 @@ tests['complex file'] = function (next) {
 };
 
 tests['complex file with include filter'] = function (next) {
-  testApp('complex file with include filter', next, {include:'**/sub*.js'});
+  testFilter(
+    'complex file with include filter',
+    {include:'**/sub*.js'},
+    ['entry.js', 'jsonthing.json'],
+    next
+  );
 };
 
 tests['complex file with exclude filter'] = function (next) {
-  testApp('complex file with exclude filter', next, {exclude:'**/sub*.js'});
+  testFilter(
+    'complex file with exclude filter',
+    {exclude:'**/sub*.js'},
+    ['submodule.js', 'subsubmodule.js'],
+    next
+  );
 };
 
 tests['complex file with filters'] = function (next) {
-  testApp('complex file with filters', next, {include:['**/*.js'], exclude:['**/subsub*.js', '**/entry.js']});
+  testFilter(
+    'complex file with filters',
+    {include:['**/*.js'], exclude:['**/subsub*.js', '**/entry.js']},
+    ['subsubmodule.js', 'entry.js', 'jsonthing.json'],
+    next
+  );
 };
 
 tests['native libs'] = function (next) {
