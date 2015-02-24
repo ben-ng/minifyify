@@ -61,13 +61,12 @@ compileApp = function (appname, map, next) {
 /**
 * Builds, uploads, and validates an app
 */
-testApp = function(appname, cb) {
+testApp = function(appname, cb, opts) {
   var filename = fixtures.bundledFile(appname)
     , mapname = fixtures.bundledMap(appname)
     , destdir = fixtures.bundledDir(appname);
 
-  // Compile lib
-  compileApp(appname, function (min, map) {
+  function validateApp(min, map) {
     // Write to the build dir
     var appdir = path.join(fixtures.buildDir, 'apps', appname);
 
@@ -85,7 +84,10 @@ testApp = function(appname, cb) {
     }, appname + ' should not throw');
 
     cb();
-  });
+  }
+
+  // Compile lib
+  opts ? compileApp(appname, opts, validateApp) : compileApp(appname, validateApp);
 };
 
 tests['simple file'] = function (next) {
@@ -94,6 +96,18 @@ tests['simple file'] = function (next) {
 
 tests['complex file'] = function (next) {
   testApp('complex file', next);
+};
+
+tests['complex file with include filter'] = function (next) {
+  testApp('complex file with include filter', next, {include:'**/sub*.js'});
+};
+
+tests['complex file with exclude filter'] = function (next) {
+  testApp('complex file with exclude filter', next, {exclude:'**/sub*.js'});
+};
+
+tests['complex file with filters'] = function (next) {
+  testApp('complex file with filters', next, {include:['**/*.js'], exclude:['**/subsub*.js', '**/entry.js']});
 };
 
 tests['native libs'] = function (next) {

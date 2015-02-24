@@ -34,6 +34,7 @@
     "source-map": "^0.3.0",
     "through": "^2.3.6",
     "tmp": "^0.0.24",
+    "transform-filter": "0.0.2",
     "uglify-js": "^2.4.16"
   },
   "scripts": {
