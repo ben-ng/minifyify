@@ -16,7 +16,7 @@ var path = require('path')
       return path.join(BUILD_DIR, 'apps', name);
     }
   , bundledFile = function (name) {
-      return path.join(BUILD_DIR, name, 'bundle.min.js');
+      return path.join(BUILD_DIR, 'apps', name, 'bundle.min.js');
     }
   , bundledMap = function (name) {
       return path.join(BUILD_DIR, name, 'bundle.map.json');
