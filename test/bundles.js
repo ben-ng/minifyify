@@ -164,6 +164,25 @@ tests['complex file with filters'] = function (next) {
   );
 };
 
+tests['default base path'] = function (next) {
+  console.log(process.cwd())
+  testFilter(
+    'default base path',
+    {include:['**/*.js'], exclude:['test/fixtures/default base path/dirA/*.js', 'dirB/*.js']},
+    ['submodule.js',  'jsonthing.json'],  // doesn't exclude dirB
+    next
+  );
+};
+
+tests['custom base path'] = function (next) {
+  testFilter(
+    'custom base path',
+    {include:['**/*.js','*.js'], exclude:['dirA/*.js', 'dirB/*.js'], base:'test/fixtures/custom base path/'},
+    ['submodule.js','subsubmodule.js', 'jsonthing.json'],
+    next
+  );
+};
+
 tests['native libs'] = function (next) {
   testApp('native libs', next);
 };
