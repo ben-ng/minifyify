@@ -112,6 +112,26 @@ Specify a path to write the sourcemap to. Required when using the CLI, optional 
 
 Will be passed to `uglify.minify`
 
+### [options.include]
+
+Pattern(s) matching the files you want included. Defaults to '**/*' (include everything).
+`null`/`undefined`, a single string, and an array of strings are all acceptable values.
+You have the full range of [glob](https://github.com/isaacs/node-glob#glob-primer)
+patterns available to you, so you can do `app/{moduleA,moduleB}/*.js`, etc.
+
+### [options.exclude]
+
+Pattern(s) matching the files you want excluded. By default _nothing_ is excluded.
+Like `include`; null, a string, and an array of strings are all acceptable.
+Exclude always wins over include.
+If a file matches both the `include` and `exclude` pattern arrays, it will be excluded.
+
+### [options.base]
+
+By default all glob strings are matched against relative paths from `process.cwd()` (your projects base directory).
+This option allows you to changed that. `base:'subDirA'` means evaluate globs relative from that sub directory.
+`base:'/'` means test your glob pattern against absolute file paths.
+
 ## FAQ
 
  * PARSE ERROR!
