@@ -126,6 +126,11 @@ Like `include`; null, a string, and an array of strings are all acceptable.
 Exclude always wins over include.
 If a file matches both the `include` and `exclude` pattern arrays, it will be excluded.
 
+### [options.base]
+
+By default all glob strings are matched against relative paths from `process.cwd()` (your projects base directory).
+This option allows you to changed that. `base:'subDirA'` means evaluate globs relative from that sub directory.
+`base:'/'` means test your glob pattern against absolute file paths.
 
 ## FAQ
 
