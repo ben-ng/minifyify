@@ -4,7 +4,7 @@ Minifyify
 
 [![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify) [![Dependency Status](https://david-dm.org/ben-ng/minifyify.svg)](https://david-dm.org/ben-ng/minifyify)
 
-*Supports up to Browserify 8*
+*Supports up to Browserify 9*
 
 Before, browserify made you choose between sane debugging and sane load times. Now, you can have both.
 
