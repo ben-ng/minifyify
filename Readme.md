@@ -73,6 +73,16 @@ $ browserify entry.js -d -p [minifyify --map bundle.map.json --output bundle.map
 
 The `--output` option is a required option on the command line interface and specifies where minifyify should write the sourcemap to on disk.
 
+In the example above, if you want to invoke minifyify to only minify
+without generating any source maps or references to it (which is done
+by setting `[options.map]` to `false` programatically), you can pass
+`--no-map` instead of `--map` and `--output`, like this:
+
+```sh
+$ browserify entry.js -d -p [minifyify --no-map] > bundle.js
+```
+
+
 ## Options
 
 ### [options.compressPath]
