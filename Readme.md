@@ -73,6 +73,12 @@ $ browserify entry.js -d -p [minifyify --map bundle.map.json --output bundle.map
 
 The `--output` option is a required option on the command line interface and specifies where minifyify should write the sourcemap to on disk.
 
+Passing options to uglify-js is as easy as passing extra parameters in as an `uglify` object.
+
+```sh
+$ browserify entry.js -d -p [minifyify --map bundle.map.json --output bundle.map.json --uglify [ --compress [ --dead_code--comparisons 0 ] ] ] > bundle.js
+```
+
 In the example above, if you want to invoke minifyify to only minify
 without generating any source maps or references to it (which is done
 by setting `[options.map]` to `false` programatically), you can pass
