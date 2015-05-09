@@ -38,24 +38,29 @@
     "uglify-js": "^2.4.16"
   },
   "scripts": {
-    "test": "jake test --trace"
+    "test": "test-peer-range browserify",
+    "test-main": "jake test --trace"
   },
   "devDependencies": {
-    "coffeeify": "latest",
-    "brfs": "latest",
-    "lodash.template": "latest",
-    "jsesc": "latest",
-    "utilities": "latest",
-    "concat-stream": "latest",
-    "browserify": "latest",
-    "jake": "latest",
-    "jquery-browserify": "latest",
-    "sourcemap-validator": "latest",
     "backbone": "latest",
-    "hbsfy": "latest",
+    "brfs": "latest",
+    "browserify": "latest",
+    "coffeeify": "latest",
+    "concat-stream": "latest",
     "envify": "latest",
     "handlebars": "latest",
-    "handlebars-runtime": "latest"
+    "handlebars-runtime": "latest",
+    "hbsfy": "latest",
+    "jake": "latest",
+    "jquery-browserify": "latest",
+    "jsesc": "latest",
+    "lodash.template": "latest",
+    "sourcemap-validator": "latest",
+    "test-peer-range": "^1.0.1",
+    "utilities": "latest"
+  },
+  "peerDependencies": {
+    "browserify": ">= 5"
   },
   "optionalDependencies": {},
   "engines": {
