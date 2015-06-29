@@ -79,6 +79,8 @@ tests['programmatic plugin api'] = function (next) {
     if(err) { throw err; }
     assert.doesNotThrow(function () {
       validate(src, map)
+      // Check if sourcesContent matches the original files
+      validateSourcesContent(map, 'simple file');
     }, 'The bundle should have a valid sourcemap');
     next();
   });
@@ -100,6 +102,8 @@ tests['programmatic plugin api with --output'] = function (next) {
 
       // The output option should have been respected
       validate(src, fs.readFileSync(outMapFile).toString());
+      // Check if sourcesContent matches the original files
+      validateSourcesContent(map, 'simple file');
 
     }, 'The bundle should have a valid sourcemap');
     next();
@@ -122,6 +126,8 @@ tests['programmatic plugin api with --map and --output'] = function (next) {
 
       // The output option should have been respected
       validate(src, fs.readFileSync(outMapFile).toString());
+      // Check if sourcesContent matches the original files
+      validateSourcesContent(map, 'simple file');
 
     }, 'The bundle should have a valid sourcemap');
     next();
@@ -194,16 +200,42 @@ tests['multiple bundles with the same transform'] = function (next) {
     if(err) { throw err; }
     assert.doesNotThrow(function () {
       validate(src, map)
+        // Check if sourcesContent matches the original files
+        validateSourcesContent(map, 'simple file');
     }, 'The bundle should have a valid sourcemap');
 
     bundler.bundle(function (err, src, map) {
       if(err) { throw err; }
       assert.doesNotThrow(function () {
         validate(src, map)
+        // Check if sourcesContent matches the original files
+        validateSourcesContent(map, 'simple file');
       }, 'The bundle should have a valid sourcemap');
       next();
     });
   });
+}
+
+function validateSourcesContent(map, entryScript) {
+  var mapData = JSON.parse(map);
+  var dir = path.dirname(fixtures.entryScript(entryScript))
+  // Find source entry in map
+  // Start from 1 to skip browserify prelude-file
+  for(var i = 1; i < mapData.sources.length; i++) {
+    var originalSource
+    // Try to resolve filename from entry-file folder
+    try {
+      originalSource = fs.readFileSync(path.resolve(dir, mapData.sources[i])).toString();
+    } catch(err) {
+      // If that fails, resolve from cwd
+      try {
+        originalSource = fs.readFileSync(path.resolve(process.cwd(), mapData.sources[i])).toString();
+      } catch(err) {
+        throw new Error('Could not find sourcefile ' + mapData.sources[i] + ' to verify.');
+      }
+    }
+    assert.equal(mapData.sourcesContent[i], originalSource, 'sourcesContent and original source file should be identical.' + mapData.sources[i]);
+  }
 }
 
 module.exports = tests;
