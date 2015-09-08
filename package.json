@@ -18,7 +18,7 @@
     "uglifyify",
     "compress"
   ],
-  "version": "7.0.5",
+  "version": "7.0.6",
   "repository": {
     "type": "git",
     "url": "git://github.com/ben-ng/minifyify.git"
