@@ -2,9 +2,7 @@ Minifyify
 =========
 #### Tiny, Debuggable Browserify Bundles
 
-[![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify) [![Dependency Status](https://david-dm.org/ben-ng/minifyify.svg)](https://david-dm.org/ben-ng/minifyify)
-
-*Supports up to Browserify 11*
+[![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify) [![Downloads](https://img.shields.io/npm/dm/minifyify.svg)](https://npmjs.com/package/minifyify) [![Dependency Status](https://david-dm.org/ben-ng/minifyify.svg)](https://david-dm.org/ben-ng/minifyify)
 
 Before, browserify made you choose between sane debugging and sane load times. Now, you can have both.
 
