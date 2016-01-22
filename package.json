@@ -35,7 +35,7 @@
     "through": "^2.3.6",
     "tmp": "0.0.28",
     "transform-filter": "^0.1.1",
-    "uglify-js": "^2.4.24"
+    "uglify-js": "^2.6.1"
   },
   "scripts": {
     "test": "test-peer-range browserify",
