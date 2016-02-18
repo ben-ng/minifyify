@@ -235,4 +235,16 @@ tests['opts.sourcesContent = false should produce a map without sourcesContent']
   });
 };
 
+tests['opts.uglify.compress = false should not compress'] = function (next) {
+  compileApp('simple file', { uglify: { compress: false, output: { beautify: true } } }, function (min, map) {
+    assert.ok(min);
+    assert.ok(map);
+
+    // Check that its not compressed
+    assert.ok(min.indexOf('header.innerHTML = anotherString;\n\ndocument.body.appendChild(header);') > -1);
+
+    next();
+  });
+};
+
 module.exports = tests;
