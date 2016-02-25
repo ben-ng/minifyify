@@ -55,7 +55,7 @@ var browserify = require('browserify')
 
 bundler.add('entry.js');
 
-bundler.plugin('minifyify', {map: 'bundle.map.json'});
+bundler.plugin('minifyify', {map: 'bundle.js.map'});
 
 bundler.bundle(function (err, src, map) {
   // Your code here
@@ -66,7 +66,7 @@ The map option should be the location of the sourcemap on your server, and is us
 
 ### Command Line
 ```sh
-$ browserify entry.js -d -p [minifyify --map bundle.map.json --output bundle.map.json] > bundle.js
+$ browserify entry.js -d -p [minifyify --map bundle.js.map --output bundle.js.map] > bundle.js
 ```
 
 The `--output` option is a required option on the command line interface and specifies where minifyify should write the sourcemap to on disk.
@@ -74,7 +74,7 @@ The `--output` option is a required option on the command line interface and spe
 Passing options to uglify-js is as easy as passing extra parameters in as an `uglify` object.
 
 ```sh
-$ browserify entry.js -d -p [minifyify --map bundle.map.json --output bundle.map.json --uglify [ --compress [ --dead_code--comparisons 0 ] ] ] > bundle.js
+$ browserify entry.js -d -p [minifyify --map bundle.js.map --output bundle.js.map --uglify [ --compress [ --dead_code--comparisons 0 ] ] ] > bundle.js
 ```
 
 In the example above, if you want to invoke minifyify to only minify
