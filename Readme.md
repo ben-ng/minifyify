@@ -4,6 +4,12 @@ Minifyify
 
 [![Build Status](https://travis-ci.org/ben-ng/minifyify.png?branch=master)](https://travis-ci.org/ben-ng/minifyify) [![Downloads](https://img.shields.io/npm/dm/minifyify.svg)](https://npmjs.com/package/minifyify) [![Dependency Status](https://david-dm.org/ben-ng/minifyify.svg)](https://david-dm.org/ben-ng/minifyify)
 
+## WARNING: Unmaintained!
+
+I have stopped writing Javascript full-time, and therefore do not use Minifyify anymore. While I will continue to accept pull requests and keep the test suite running, you should consider better-maintained alternatives. Thank you for your support!
+
+## Why use Minifyify?
+
 Before, browserify made you choose between sane debugging and sane load times. Now, you can have both.
 
 Minifyify is a browserify plugin that minifies your code. The magic? The sourcemap points back to the original, separate source files.
