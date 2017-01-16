@@ -6,7 +6,7 @@ Minifyify
 
 ## WARNING: Unmaintained!
 
-I have stopped writing Javascript full-time, and therefore do not use Minifyify anymore. While I will continue to accept pull requests and keep the test suite running, you should consider better-maintained alternatives. Thank you for your support!
+I have stopped writing Javascript full-time, and therefore do not use Minifyify anymore. While I will continue to accept pull requests and keep the test suite running, you should consider better-maintained alternatives, such as [uglifyify](https://github.com/hughsk/uglifyify). Thank you for your support!
 
 ## Why use Minifyify?
 
